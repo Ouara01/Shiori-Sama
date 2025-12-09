@@ -1,0 +1,178 @@
+/* ------------------- */
+/*       GLOBAL        */
+/* ------------------- */
+
+body {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1rem;
+    background-color: black;
+    color: white;
+}
+
+main {
+    margin-left: 12%;
+    margin-right: 12%;
+}
+
+h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.rep-visio,
+.sorties-jour,
+.derniers-episodes,
+.derniers-scans,
+.les-classiques {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid white;
+}
+
+
+a {
+    text-decoration: none;
+    color: white;
+    font-weight: 700;
+}
+
+/* ------------------- */
+/*       HEADER        */
+/* ------------------- */
+
+.shiori-header {
+    display: flex;
+    align-items: center;      /* centre vertical */
+    justify-content: space-between;
+    border-bottom: 1px solid white;
+}
+
+.titre-accueil {
+    font-family: 'Electroharmonix', 'Quicksand', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-left: 24px;
+    margin-top: 0px;
+    padding: 12px;
+}
+
+.titre-accueil:hover {
+    color: #C3423F;
+    transition: all 0.3s;
+}
+
+/* Conteneur des liens + recherche */
+.nav-links {
+    display: flex;
+    align-items: center;      /* centre tout verticalement */
+    gap: 1rem;
+    padding: 12px 8px;
+}
+
+.nav-catalogue,
+.nav-planning,
+.nav-profil {
+    padding: 12px 8px;
+}
+
+.nav-catalogue:hover,
+.nav-catalogue:focus,
+.nav-planning:hover,
+.nav-planning:focus,
+.nav-profil:hover,
+.nav-profil:focus {
+    color:#C3423F;
+    transition: all 0.3s;
+}
+
+/* --------------------------- */
+/* --------- Icônes --------- */
+/* --------------------------- */
+
+.nav-icon {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+    vertical-align: top;
+    padding-right: 8px;
+}
+
+.h2-icons {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+/* ------------------------ */
+/*     BARRE RECHERCHE     */
+/* ------------------------ */
+
+.shiori-desktop-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    position: absolute;
+    left: 10px;
+}
+
+.shiori-desktop-search input {
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 0.5em 1em 0.5em 35px;  /* espace pour l'icône */
+    width: 200px;
+    color: white;
+    transition: all 0.2s;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+}
+
+#shiori-result-desktop {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background-color: #111;
+    border: 1px solid #333;
+    border-radius: 8px;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none; /* Masqué par défaut */
+    padding: 10px 15px;
+    box-sizing: border-box;
+}
+
+.shiori-desktop-search input:hover,
+.shiori-desktop-search input:focus {
+    border-color: #c3423f;
+    outline: none;
+}
+
+/* ------------------- */
+/*     CAROUSELS       */
+/* ------------------- */
+
+.carousel-reprendre,
+.carousel-anime {
+    width: 100%;
+    display: flex;
+    overflow-x: scroll;
+    background-color: rgba(25, 25, 112, 0.1);
+    margin: 1rem 0;
+}
+
+/* ------------------- */
+/*   FONT IMPORTÉE     */
+/* ------------------- */
+
+@font-face {
+    font-family: 'Electroharmonix';
+    src: url('./assets/fonts/electroharmonix.woff2') format('woff2');
+}
