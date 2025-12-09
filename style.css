@@ -39,6 +39,22 @@ a {
     font-weight: 700;
 }
 
+/* Affichage Mobile */
+@media (max-width: 768px) {
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero-title {
+    font-size: 1.4rem;
+  }
+
+  .container {
+    padding: 0 10px;
+  }
+}
+
 /* ------------------- */
 /*       HEADER        */
 /* ------------------- */
