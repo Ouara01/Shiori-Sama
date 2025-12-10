@@ -1,165 +1,192 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <title>Shiori-Sama - Streaming</title>
+<title>Shiori-Sama - Streaming</title>
 
-    <link rel="stylesheet" href="style.css" />
+<link rel="stylesheet" href="style.css"/>
 
-    <!-- FONT -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet" />
+<!-- FONT -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
 
-    <!-- FAVICON -->
-    <link
-      rel="icon"
-      href="https://media.discordapp.net/attachments/645327514222198827/1441139994180718652/A24riZ0OTKCeLBmZzUK3ZQ.jpg?format=webp"
-    />
+<!-- FAVICON -->
+<link
+  rel="icon"
+  href="https://media.discordapp.net/attachments/645327514222198827/1441139994180871865/A24riZ0OTKCeLBmZzUK3ZQ.jpg?format=webp"/>
+
 </head>
 
 <body>
-  <!-- HEADER -->
-  <header class="shiori-header">
+
+<!-- ========== HEADER ========== -->
+
+<header class="shiori-header">
     <a class="titre-accueil" href="index.html">SHIORI SAMA</a>
 
-    <nav>
+<nav>
 
-        <!-- Icône burger mobile -->
-        <div class="burger-menu-btn" id="burger-btn">
-            <span></span>
-            <span></span>
-            <span></span>
+    <!-- BOUTON BURGER (visible uniquement sur mobile) -->
+    <div class="burger-menu-btn" id="burgerBtn">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <!-- AJOUT : Ajout de la classe 'mobile-menu-top' pour le menu slide depuis le haut -->
+    <!-- MENU MOBILE -->
+    <div class="mobile-menu mobile-menu-top" id="mobileMenu">
+        <div class="mobile-menu-header">
+            <div class="mobile-menu-title">Menu</div>
         </div>
-        
-        <!-- Menu mobile -->
-        <nav class="mobile-menu" id="mobile-menu">
-            <div class="mobile-menu-content">
-        
-                <!-- Titre / Logo mobile -->
-                <div class="mobile-menu-header">
-                    <span class="mobile-menu-title">Menu</span>
-                </div>
-        
-                <!-- NAVIGATION → récupère tes liens actuels -->
-                <a href="#" class="mobile-link">Catalogue</a>
-                <a href="#" class="mobile-link">Planning</a>
-                <a href="#" class="mobile-link">Profil</a>
-        
+
+        <div class="mobile-menu-content">
+            <a href="#" class="mobile-link">Catalogue</a>
+            <a href="#" class="mobile-link">Planning</a>
+            <a href="#" class="mobile-link">Profil</a>
+        </div>
+    </div>
+
+    <!-- NAVIGATION DESKTOP (masquée sur mobile) -->
+    <section class="nav-links">
+
+        <!-- Barre de recherche -->
+        <div class="shiori-desktop-search">
+            <img src="src/assets/icons/magnifying-glass-search-svgrepo-com.svg" alt="Search" class="search-icon"/>
+            <input type="text" placeholder="Rechercher..."/>
+
+            <!-- Conteneur des résultats de recherche (affiché dynamiquement via JS) -->
+            <div id="shiori-result-desktop">
+                <p>Résultats de recherche...</p>
+                <p>Résultats de recherche...</p>
+                <p>Résultats de recherche...</p>
+                <p>Résultats de recherche...</p>
+                <p>Résultats de recherche...</p>
+                <p>Résultats de recherche...</p>
+                <p>Résultats de recherche...</p>
+                <p>Résultats de recherche...</p>
             </div>
-        </nav>        
+        </div>
 
-      <section class="nav-links">
-            <!-- Barre de recherche -->
-            <div class="shiori-desktop-search">
-                <img src="src/assets/icons/magnifying-glass-search-svgrepo-com.svg" alt="Search" class="nav-icon search-icon" />
-                <input type="text" placeholder="Rechercher..." />
-                <div id="shiori-result-desktop">
-                    <p>Résultats de recherche...</p>
-                    <p>Résultats de recherche...</p>
-                    <p>Résultats de recherche...</p>
-                    <p>Résultats de recherche...</p>
-                    <p>Résultats de recherche...</p>
-                    <p>Résultats de recherche...</p>
-                    <p>Résultats de recherche...</p>
-                    <p>Résultats de recherche...</p>
-                </div>
-            </div>
+        <!-- Icônes Desktop -->
+        <a href="#Catalogue" class="nav-catalogue">
+            <img src="src/assets/icons/cards.svg" alt="Catalogue" class="nav-icon"/>
+            <span>Catalogue</span>
+        </a>
 
-            <!-- Icônes de navigation -->
-            <a href="#Catalogue" class="nav-catalogue">
-                <img src="src/assets/icons/cards.svg" alt="Catalogue" class="nav-icon" />
-                <span>Catalogue</span>
-            </a>
+        <a href="#Planning" class="nav-planning">
+            <img src="src/assets/icons/calendar.svg" alt="Planning" class="nav-icon"/>
+            <span>Planning</span>
+        </a>
 
-            <a href="#Planning" class="nav-planning">
-                <img src="src/assets/icons/calendar.svg" alt="Planning" class="nav-icon" />
-                <span>Planning</span>
-            </a>
+        <a href="#Profil" class="nav-profil">
+            <img src="src/assets/icons/user-square.svg" alt="Profil" class="nav-icon"/>
+            <span>Profil</span>
+        </a>
 
-            <a href="#Profil" class="nav-profil">
-                <img src="src/assets/icons/user-square.svg" alt="Profil" class="nav-icon" />
-                <span>Profil</span>
-            </a>
-      </section>
-    </nav>
-  </header>
+    </section>
 
-  <!-- BANNIÈRE SAISON -->
+</nav>
+
+</header>
+
+<!-- AJOUT : Overlay pour assombrir la page quand le menu mobile est ouvert -->
+
+<div class="menu-overlay"></div>
+
+<!-- ========== BANNIÈRE SAISON ========== -->
+
 <section class="season-banner-wrapper">
-  <section class="season-banner">
-    <div class="season-banner-overlay"></div>
+    <section class="season-banner">
+        <!-- Overlay sombre sur les images -->
+        <div class="season-banner-overlay"></div>
 
-    <div class="season-banner-images" id="season-banner-images">
-      <!-- injecté dynamiquement -->
-    </div>
+<!-- Images injectées dynamiquement via JavaScript -->
+        <div class="season-banner-images" id="season-banner-images">
+            <!-- Les images de la saison actuelle apparaîtront ici -->
+        </div>
 
-    <div class="season-banner-text">
-      <h2>NOUVELLE SAISON</h2>
-      <p>Montez dans le train pour suivre les pépites du moment !</p>
-    </div>
-  </section>
+        <!-- Texte descriptif de la bannière -->
+        <div class="season-banner-text">
+            <h2>NOUVELLE SAISON</h2>
+            <p>Montez dans le train pour suivre les pépites du moment !</p>
+        </div>
 </section>
 
-  <!-- MAIN -->
-  <main>
-    <!-- REPRENEZ VOTRE VISIONNAGE -->
-    <section class="section-reprendre">
-      <div class="rep-visio">
-        <img class="h2-icons" src="src/assets/icons/clock.svg" alt="Icône horloge" />
+</section>
+
+<!-- ========== MAIN CONTENT ========== -->
+
+<main>
+
+<!-- SECTION : Reprendre votre visionnage -->
+<section class="section-reprendre">
+    <div class="rep-visio">
+        <img class="h2-icons" src="src/assets/icons/clock.svg" alt="Icône horloge"/>
         <h2 class="h2-visio">REPRENEZ VOTRE VISIONNAGE</h2>
-      </div>
-      <div class="carousel-anime" id="carousel-reprendre"></div>
-    </section>
-
-    <!-- SORTIES DU JOUR -->
-    <section class="section-sorties-jour">
-      <div class="sorties-jour">
-        <img class="h2-icons" src="src/assets/icons/arrow-left-04.svg" alt="Précédent" />
-        <h2 class="h2-sorties" id="date-title"></h2>
-        <img class="h2-icons" src="src/assets/icons/arrow-right-04.svg" alt="Suivant" />
-      </div>
-      <div class="carousel-anime" id="carousel-sorties-jour"></div>
-    </section>
-
-    <!-- DERNIERS ÉPISODES AJOUTÉS -->
-    <section class="section-derniers-episodes">
-      <div class="derniers-episodes">
-        <img class="h2-icons" src="src/assets/icons/directbox-receive.svg" alt="Icône nouveautés" />
-        <h2 class="h2-episodes">DERNIERS ÉPISODES AJOUTÉS</h2>
-      </div>
-      <div class="carousel-anime" id="carousel-episodes"></div>
-    </section>
-
-    <!-- DERNIERS SCANS AJOUTÉS -->
-    <section class="section-derniers-scans">
-      <div class="derniers-scans">
-        <img class="h2-icons" src="src/assets/icons/directbox-receive.svg" alt="Icône scans" />
-        <h2 class="h2-scans">DERNIERS SCANS AJOUTÉS</h2>
-      </div>
-      <div class="carousel-anime" id="carousel-scans"></div>
-    </section>
-
-    <!-- LES CLASSIQUES -->
-    <section class="section-classiques">
-      <div class="les-classiques">
-        <img class="h2-icons" src="src/assets/icons/verify.svg" alt="Icône classiques" />
-        <h2 class="h2-classiques">LES CLASSIQUES</h2>
-      </div>
-      <div class="carousel-anime" id="carousel-classiques"></div>
-    </section>
-
-    <!-- SCRIPT -->
-    <script src="script.js"></script>
-  </main>
-
-  <!-- FOOTER -->
-  <footer class="shiori-footer">
-    <div class="footer-content">
-      <span class="footer-copyright"></span><strong>&copy; <span id="date-copyright"></span> Shiori-Sama</strong><br/>Tous droits réservés</span>
     </div>
-  </footer>
+    <!-- Carrousel rempli dynamiquement avec localStorage -->
+    <div class="carousel-anime" id="carousel-reprendre"></div>
+</section>
+
+<!-- SECTION : Sorties du jour -->
+<section class="section-sorties-jour">
+    <div class="sorties-jour">
+        <img class="h2-icons" src="src/assets/icons/arrow-left-04.svg" alt="Précédent"/>
+        <!-- Date injectée dynamiquement via JavaScript -->
+        <h2 class="h2-sorties" id="date-title"></h2>
+        <img class="h2-icons" src="src/assets/icons/arrow-right-04.svg" alt="Suivant"/>
+    </div>
+    <!-- Carrousel rempli via l'API Jikan (sorties du jour) -->
+    <div class="carousel-anime" id="carousel-sorties-jour"></div>
+</section>
+
+<!-- SECTION : Derniers épisodes ajoutés -->
+<section class="section-derniers-episodes">
+    <div class="derniers-episodes">
+        <img class="h2-icons" src="src/assets/icons/directbox-receive.svg" alt="Icône nouveautés"/>
+        <h2 class="h2-episodes">DERNIERS ÉPISODES AJOUTÉS</h2>
+    </div>
+    <!-- Carrousel rempli via AniList API -->
+    <div class="carousel-anime" id="carousel-episodes"></div>
+</section>
+
+<!-- SECTION : Derniers scans ajoutés -->
+<section class="section-derniers-scans">
+    <div class="derniers-scans">
+        <img class="h2-icons" src="src/assets/icons/directbox-receive.svg" alt="Icône scans"/>
+        <h2 class="h2-scans">DERNIERS SCANS AJOUTÉS</h2>
+    </div>
+    <!-- Carrousel rempli via AniList API (type MANGA) -->
+    <div class="carousel-anime" id="carousel-scans"></div>
+</section>
+
+<!-- SECTION : Les classiques -->
+<section class="section-classiques">
+    <div class="les-classiques">
+        <img class="h2-icons" src="src/assets/icons/verify.svg" alt="Icône classiques"/>
+        <h2 class="h2-classiques">LES CLASSIQUES</h2>
+    </div>
+    <!-- Carrousel rempli via AniList API (score élevé + popularité) -->
+    <div class="carousel-anime" id="carousel-classiques"></div>
+</section>
+
+<!-- Chargement du script JavaScript -->
+<script src="script.js"></script>
+
+</main>
+
+<!-- ========== FOOTER ========== -->
+
+<footer class="shiori-footer">
+    <div class="footer-content">
+        <!-- Année injectée dynamiquement via JavaScript -->
+        <strong>&copy; <span id="date-copyright"></span> Shiori-Sama</strong><br/>
+        Tous droits réservés
+    </div>
+</footer>
 </body>
 </html>
