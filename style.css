@@ -1,102 +1,94 @@
-/* ------------------- */
-/*   FONT IMPORTÉE     */
-/* ------------------- */
+/* =============================================================== */
+/*                      FONT IMPORTÉE                              */
+/* =============================================================== */
 
 @font-face {
-    font-family: 'Electroharmonix';
-    src: url('src/assets/fonts/Electroharmonix.woff2') format('woff2');
+font-family: 'Electroharmonix';
+src: url('src/assets/fonts/Electroharmonix.woff2') format('woff2');
 }
 
-/* ------------------- */
-/*       GLOBAL        */
-/* ------------------- */
+/* =============================================================== */
+/*                      STYLES GLOBAUX                             */
+/* =============================================================== */
 
 body {
-    font-family: 'Quicksand', sans-serif;
-    font-size: 1rem;
-    background-color: black;
-    color: white;
+font-family: 'Quicksand', sans-serif;
+font-size: 1rem;
+background-color: black;
+color: white;
+margin: 0;
+padding: 0;
 }
 
+/* Conteneur principal avec marges latérales */
 main {
-    margin-left: 12%;
-    margin-right: 12%;
+margin-left: 12%;
+margin-right: 12%;
 }
 
+/* Titres de sections */
 h2 {
-    font-size: 20px;
-    font-weight: 700;
+font-size: 20px;
+font-weight: 700;
 }
 
+/* Conteneurs des titres de sections avec bordure inférieure */
 .rep-visio,
 .sorties-jour,
 .derniers-episodes,
 .derniers-scans,
 .les-classiques {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid white;
+display: flex;
+align-items: center;
+gap: 8px;
+margin-top: 2rem;
+margin-bottom: 1rem;
+border-bottom: 1px solid white;
 }
 
+/* Liens sans soulignement */
 a {
-    text-decoration: none;
-    color: white;
-    font-weight: 700;
+text-decoration: none;
+color: white;
+font-weight: 700;
 }
 
-/* Affichage Mobile */
-@media (max-width: 768px) {
-  .nav-links {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .hero-title {
-    font-size: 1.4rem;
-  }
-
-  .container {
-    padding: 0 10px;
-  }
-}
-
-/* ------------------- */
-/*       HEADER        */
-/* ------------------- */
+/* =============================================================== */
+/*                      HEADER & NAVIGATION                        */
+/* =============================================================== */
 
 .shiori-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid white;
-    margin-bottom: 1.5rem;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid white;
+margin-bottom: 1.5rem;
 }
 
+/* Logo du site */
 .titre-accueil {
-    font-family: 'Electroharmonix', 'Quicksand', sans-serif;
-    font-size: 20px;
-    font-weight: 700;
-    margin-left: 24px;
-    margin-top: 0px;
-    padding: 12px;
+font-family: 'Electroharmonix', 'Quicksand', sans-serif;
+font-size: 20px;
+font-weight: 700;
+margin-left: 24px;
+margin-top: 0px;
+padding: 12px;
 }
 
 .titre-accueil:hover {
-    color: #C3423F;
-    transition: all 0.3s;
+color: #C3423F;
+transition: all 0.3s;
 }
 
-/* Conteneur des liens + recherche */
+/* Conteneur des liens de navigation + barre de recherche (desktop) */
 .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 8px 8px;
+display: flex;
+align-items: center;
+gap: 1rem;
+padding: 8px 8px;
 }
 
+/* Liens individuels de navigation */
 .nav-catalogue,
 .nav-planning,
 .nav-profil {
@@ -110,38 +102,41 @@ a {
 .nav-planning:focus,
 .nav-profil:hover,
 .nav-profil:focus {
-    color:#C3423F;
-    transition: all 0.3s;
+color:#C3423F;
+transition: all 0.3s;
 }
 
-/* --------------------------- */
-/* --------- Icônes --------- */
-/* --------------------------- */
+/* =============================================================== */
+/*                      ICÔNES                                     */
+/* =============================================================== */
 
+/* Icônes de navigation */
 .nav-icon {
-    width: 20px;
-    height: 20px;
-    object-fit: contain;
-    vertical-align: top;
-    padding-right: 8px;
+width: 20px;
+height: 20px;
+object-fit: contain;
+vertical-align: top;
+padding-right: 8px;
 }
 
+/* Icônes des titres de section */
 .h2-icons {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
+width: 24px;
+height: 24px;
+object-fit: contain;
 }
 
-/* ------------------------ */
-/*     BARRE RECHERCHE     */
-/* ------------------------ */
+/* =============================================================== */
+/*                   BARRE DE RECHERCHE DESKTOP                    */
+/* =============================================================== */
 
 .shiori-desktop-search {
-    position: relative;
-    display: flex;
-    align-items: center;
+position: relative;
+display: flex;
+align-items: center;
 }
 
+/* Icône de recherche positionnée à l'intérieur de l'input */
 .search-icon {
     position: absolute;
     width: 20px;
@@ -152,6 +147,7 @@ a {
     padding-left: 8px;
 }
 
+/* Input de recherche */
 .shiori-desktop-search input {
     background: #111;
     border: 1px solid #333;
@@ -164,365 +160,562 @@ a {
     font-weight: 600;
 }
 
+/* Conteneur des résultats de recherche (affiché/masqué via JS) */
 #shiori-result-desktop {
-    position: absolute;
-    top: 40px;
-    left: 0;
-    background-color: #111;
-    border: 1px solid #333;
-    border-radius: 8px;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    display: none;
-    padding: 10px 15px;
-    box-sizing: border-box;
+position: absolute;
+top: 40px;
+left: 0;
+background-color: #111;
+border: 1px solid #333;
+border-radius: 8px;
+width: 100%;
+max-height: 200px;
+overflow-y: auto;
+z-index: 1000;
+display: none;
+padding: 10px 15px;
+box-sizing: border-box;
 }
 
+/* Effet hover/focus sur l'input */
 .shiori-desktop-search input:hover,
 .shiori-desktop-search input:focus {
-    border-color: #c3423f;
-    outline: none;
+border-color: #c3423f;
+outline: none;
 }
 
-/* ------------------- */
-/*     CARDS           */
-/* ------------------- */
+/* =============================================================== */
+/*                      CARDS (CARTES D'ANIME)                     */
+/* =============================================================== */
 
 .shiori-card {
-    width: 175px;
-    height: 275px;
-    flex: 0 0 auto;
-    display: flex;
-    flex-direction: column;
-    background-color: rgba(51, 51, 51, 0.6);
-    border: 1px solid #333;
-    border-radius: 10px;
-    overflow: hidden;
-    scroll-snap-align: start;
-    position: relative;
-    transition: transform 0.2s ease-in-out;
+width: 175px;
+height: 275px;
+flex: 0 0 auto;
+display: flex;
+flex-direction: column;
+background-color: rgba(51, 51, 51, 0.6);
+border: 1px solid #333;
+border-radius: 10px;
+overflow: hidden;
+scroll-snap-align: start;
+position: relative;
+transition: transform 0.2s ease-in-out;
 }
 
+/* Effet zoom au survol */
 .shiori-card:hover {
-    transform: scale(1.05);
+transform: scale(1.05);
 }
 
+/* Image de couverture */
 .shiori-card img {
-    width: 100%;
-    height: 45%;
-    object-fit: cover;
+width: 100%;
+height: 45%;
+object-fit: cover;
 }
 
-/* Titre juste sous l'image */
+/* Titre de l'anime/manga */
 .card-title {
-    text-align: center;
-    font-weight: 600;
-    font-size: 14px;
-    padding: 4px 6px;
-    margin-top: 4px;
-    color: white;
-    border-radius: 8px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+text-align: center;
+font-weight: 600;
+font-size: 14px;
+padding: 4px 6px;
+margin-top: 4px;
+color: white;
+border-radius: 8px;
+overflow: hidden;
+white-space: nowrap;
+text-overflow: ellipsis;
 }
 
-/* Boîte type en haut à gauche */
+/* Badge du type (ANIME, MANGA, etc.) en haut à gauche */
 .card-type {
-    position: absolute;
-    top: 8px;
-    left: 8px;
-    background-color: rgba(255, 255, 255, 0.6);
-    color: black;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 30px;
+position: absolute;
+top: 8px;
+left: 8px;
+background-color: rgba(255, 255, 255, 0.6);
+color: black;
+font-size: 10px;
+font-weight: 700;
+padding: 2px 6px;
+border-radius: 6px;
+display: flex;
+align-items: center;
+justify-content: center;
+min-width: 30px;
 }
 
-/* Boîte langue en haut à droite */
+/* Badge de la langue en haut à droite (drapeau) */
 .card-language {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background-color: rgba(255, 255, 255, 0.6);
-    color: black;
-    font-size: 10px;
-    font-weight: 700;
-    padding: 2px 6px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 24px;
+position: absolute;
+top: 8px;
+right: 8px;
+background-color: rgba(255, 255, 255, 0.6);
+color: black;
+font-size: 10px;
+font-weight: 700;
+padding: 2px 6px;
+border-radius: 6px;
+display: flex;
+align-items: center;
+justify-content: center;
+min-width: 24px;
 }
 
-/* Info supplémentaire (saison/épisode) */
+/* Informations supplémentaires (saison/épisode) en bas */
 .card-info {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    padding: 4px 0;
+position: absolute;
+bottom: 0;
+width: 100%;
+display: flex;
+justify-content: center;
+gap: 4px;
+padding: 4px 0;
 }
 
 .card-info span {
-    background-color: rgba(255,255,255,0.1);
-    padding: 2px 4px;
-    border-radius: 4px;
-    font-size: 12px;
+background-color: rgba(255,255,255,0.1);
+padding: 2px 4px;
+border-radius: 4px;
+font-size: 12px;
 }
 
-/* ------------------- */
-/*   SCROLL CAROUSELS  */
-/* ------------------- */
+/* =============================================================== */
+/*                   CAROUSELS (DÉFILEMENT HORIZONTAL)             */
+/* =============================================================== */
 
-.carousel-anime,
-.carousel-reprendre,
-.carousel-sorties-jour,
-.carousel-episodes,
-.carousel-scans,
-.carousel-classiques {
-    width: 100%;
-    display: flex;
-    gap: 24px;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    padding-bottom: 10px;
-    margin: 2rem 0;
+.carousel-anime {
+width: 100%;
+display: flex;
+gap: 24px;
+overflow-x: auto;
+scroll-snap-type: x mandatory;
+padding-bottom: 10px;
+margin: 2rem 0;
 }
 
-.carousel::-webkit-scrollbar {
-    display: none;
+/* Masque la scrollbar pour un design plus propre */
+.carousel-anime::-webkit-scrollbar {
+display: none;
 }
 
-/* ------------------- */
-/*       FOOTER        */
-/* ------------------- */
+/* =============================================================== */
+/*                      FOOTER                                     */
+/* =============================================================== */
 
 .shiori-footer {
-    width: 100%;
-    padding: 4rem 0; /* ← augmente la hauteur naturellement */
-    padding-bottom: 0.5rem;
-    padding-left: 0.5rem;
-    border-top: 1px solid white;
-    margin-top: 10rem;
-    font-size: 14px;
-    color: #888;
-    display: flex;
-    justify-content: left;
-    text-align: bottom;
+width: 100%;
+padding: 4rem 0;
+padding-bottom: 0.5rem;
+padding-left: 0.5rem;
+border-top: 1px solid white;
+margin-top: 10rem;
+font-size: 14px;
+color: #888;
+display: flex;
+justify-content: left;
+text-align: bottom;
 }
 
-/* ================================================================= */
-/* =======================  BANNIÈRE SAISON  ======================== */
-/* ================================================================= */
+/* =============================================================== */
+/*                   BANNIÈRE SAISON (HERO BANNER)                 */
+/* =============================================================== */
 
 .season-banner-wrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  margin-top: 2rem;
+width: 100%;
+display: flex;
+justify-content: center;
+margin-top: 2rem;
 }
 
 .season-banner {
-  position: relative;
-  width: 76%;
-  min-height: 240px;
-  background: #0a0a0a;
-  border-radius: 12px;
-  padding: 0;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  gap: 0;
-  box-shadow: 0 0 25px rgba(0,0,0,0.6);
-  border: 1px solid rgba(255,255,255,0.08);
+position: relative;
+width: 76%;
+min-height: 240px;
+background: #0a0a0a;
+border-radius: 12px;
+padding: 0;
+overflow: hidden;
+display: flex;
+align-items: center;
+gap: 0;
+box-shadow: 0 0 25px rgba(0,0,0,0.6);
+border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* --- Overlay sombre sur les images (comme Anime-Sama) --- */
+/* Overlay sombre pour améliorer la lisibilité du texte */
 .season-banner-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    rgba(0,0,0,0.65) 0%,
-    rgba(0,0,0,0.4) 40%,
-    rgba(0,0,0,0) 100%
-  );
-  pointer-events: none;
-  z-index: 3;
+position: absolute;
+inset: 0;
+background: linear-gradient(
+90deg,
+rgba(0,0,0,0.65) 0%,
+rgba(0,0,0,0.4) 40%,
+rgba(0,0,0,0) 100%
+);
+pointer-events: none;
+z-index: 3;
 }
 
-/* ---------------------- IMAGES ---------------------- */
+/* Conteneur des images de la bannière */
 .season-banner-images {
-  display: flex;
-  flex: 1 1 auto;
-  overflow: hidden;
-  padding-left: 20px;
-  gap: 10px;
-  z-index: 2;
+display: flex;
+flex: 1 1 auto;
+overflow: hidden;
+padding-left: 20px;
+gap: 10px;
+z-index: 2;
 }
 
+/* Découpe diagonale pour un effet visuel moderne */
 .season-banner-images img {
-  height: 220px;
-  width: 140px;
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: transform .3s ease, filter .3s ease;
-
-  /* Découpe diagonale comme Anime-Sama */
-  clip-path: parallelogram(
-      8% 0,
-      100% 0,
-      92% 100%,
-      0% 100%
-  );
+height: 220px;
+width: 140px;
+object-fit: cover;
+border-radius: 6px;
+cursor: pointer;
+transition: transform .3s ease, filter .3s ease;
+clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
 }
 
 .season-banner-images img:hover {
-  transform: scale(1.05);
-  filter: brightness(1.15);
+transform: scale(1.05);
+filter: brightness(1.15);
 }
 
-/* ---------------------- TEXTE ---------------------- */
+/* Texte de la bannière (titre + description) */
 .season-banner-text {
-  position: relative;
-  z-index: 5;
-  width: 300px;
-  padding-right: 30px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+position: relative;
+z-index: 5;
+width: 300px;
+padding-right: 30px;
+text-align: center;
+display: flex;
+flex-direction: column;
+justify-content: center;
 }
 
 .season-banner-text h2 {
-  font-size: 2rem;
-  margin: 0;
-  font-weight: 800;
-  letter-spacing: 1px;
-  color: white;
-  text-transform: uppercase;
-  font-family: 'Electroharmonix', 'Quicksand', sans-serif;
+font-size: 2rem;
+margin: 0;
+font-weight: 800;
+letter-spacing: 1px;
+color: white;
+text-transform: uppercase;
+font-family: 'Electroharmonix', 'Quicksand', sans-serif;
 }
 
 .season-banner-text p {
-  margin-top: 0.3rem;
-  font-size: 1.05rem;
-  font-weight: 600;
-  color: #d8d8d8;
-  line-height: 1.3;
-  font-family: 'Quicksand', sans-serif;
+margin-top: 0.3rem;
+font-size: 1.05rem;
+font-weight: 600;
+color: #d8d8d8;
+line-height: 1.3;
+font-family: 'Quicksand', sans-serif;
 }
 
-/* ================================================================ */
-/* ======================  TABLETTE 1024px  ======================== */
-/* ================================================================ */
+/* =============================================================== */
+/*                   MENU BURGER MOBILE                            */
+/* =============================================================== */
+
+/* Bouton burger (3 barres) - visible uniquement sur mobile */
+.burger-menu-btn {
+display: none;
+width: 32px;
+height: 24px;
+flex-direction: column;
+justify-content: space-between;
+cursor: pointer;
+z-index: 1002;
+padding: 4px;
+}
+
+.burger-menu-btn span {
+display: block;
+height: 3px;
+width: 100%;
+background: white;
+border-radius: 4px;
+transition: 0.35s ease;
+}
+
+/* Animation en croix (X) quand le menu est ouvert */
+.burger-open span:nth-child(1) {
+transform: translateY(10px) rotate(45deg);
+}
+.burger-open span:nth-child(2) {
+opacity: 0;
+}
+.burger-open span:nth-child(3) {
+transform: translateY(-10px) rotate(-45deg);
+}
+
+/* Overlay global (assombrit la page quand le menu est ouvert) */
+.menu-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.0);
+backdrop-filter: blur(2px);
+opacity: 0;
+pointer-events: none;
+transition: opacity 0.35s ease;
+z-index: 999;
+}
+
+.menu-overlay.active {
+background: rgba(0,0,0,0.35);
+opacity: 1;
+pointer-events: all;
+}
+
+/* Menu mobile qui slide depuis le HAUT avec effet glassmorphism */
+.mobile-menu–top {
+position: fixed;
+top: -100vh;
+left: 0;
+width: 100%;
+height: 65vh;
+background: rgba(10, 10, 10, 0.55);
+backdrop-filter: blur(8px);
+box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+border-bottom: 1px solid rgba(255,255,255,0.06);
+transition: top 0.45s cubic-bezier(.2,.9,.2,1), opacity 0.35s ease;
+opacity: 0;
+z-index: 1000;
+overflow: hidden;
+}
+
+/* État ouvert du menu */
+.mobile-menu–top.open {
+top: 0;
+opacity: 1;
+}
+
+/* Contenu du menu mobile */
+.mobile-menu-content {
+padding: 3rem 1.25rem 1rem 1.25rem;
+height: calc(65vh - 3rem);
+overflow-y: auto;
+}
+
+/* En-tête du menu mobile */
+.mobile-menu-header {
+margin-bottom: 2rem;
+border-bottom: 1px solid rgba(255,255,255,0.2);
+padding-bottom: 0.8rem;
+}
+
+.mobile-menu-title {
+font-size: 1.4rem;
+font-weight: 700;
+font-family: 'Electroharmonix', 'Quicksand', sans-serif;
+}
+
+/* Liens du menu mobile */
+.mobile-link {
+display: block;
+font-size: 1.1rem;
+padding: 0.8rem 0;
+color: white;
+font-weight: 600;
+border-bottom: 1px solid rgba(255,255,255,0.07);
+transition: 0.2s;
+}
+
+.mobile-link:hover {
+color: #C3423F;
+}
+
+/* Empêcher le scroll du body quand le menu est ouvert */
+body.no-scroll {
+overflow: hidden;
+}
+
+/* =============================================================== */
+/*                   RESPONSIVE - TABLETTE 1024px                  */
+/* =============================================================== */
 
 @media (max-width: 1024px) {
 
-    main {
-        margin-left: 6%;
-        margin-right: 6%;
-    }
-
-    h2 {
-        font-size: 19px;
-    }
-
-    /* Cards légèrement réduites */
-    .shiori-card {
-        width: 155px;
-        height: 245px;
-    }
-
-    .carousel-anime,
-    .carousel-reprendre,
-    .carousel-sorties-jour,
-    .carousel-episodes,
-    .carousel-scans,
-    .carousel-classiques {
-        gap: 18px;
-    }
-
-    /* Bannière saison */
-    .season-banner {
-        width: 88%;
-    }
-
-    .season-banner-images img {
-        width: 130px;
-        height: 190px;
-    }
-
-    .season-banner-text h2 {
-        font-size: 1.8rem;
-    }
+main {
+    margin-left: 6%;
+    margin-right: 6%;
 }
 
-/* ================================================================ */
-/* ======================  TABLETTE 900px  ========================= */
-/* ================================================================ */
+h2 {
+    font-size: 19px;
+}
+
+/* Cards légèrement réduites */
+.shiori-card {
+    width: 155px;
+    height: 245px;
+}
+
+.carousel-anime {
+    gap: 18px;
+}
+
+/* Bannière saison */
+.season-banner {
+    width: 88%;
+}
+
+.season-banner-images img {
+    width: 130px;
+    height: 190px;
+}
+
+.season-banner-text h2 {
+    font-size: 1.8rem;
+}
+
+}
+
+/* =============================================================== */
+/*                   RESPONSIVE - TABLETTE 900px                   */
+/* =============================================================== */
 
 @media (max-width: 900px) {
 
-    main {
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-
-    .shiori-header {
-        padding: 0.8rem 5%;
-    }
-
-    /* Navigation */
-    .nav-links {
-        gap: 0.6rem;
-    }
-
-    .shiori-desktop-search input {
-        width: 160px;
-    }
-
-    /* Cards */
-    .shiori-card {
-        width: 145px;
-        height: 235px;
-    }
-
-    .shiori-card img {
-        height: 42%;
-    }
-
-    /* Bannière saison */
-    .season-banner {
-        width: 94%;
-        padding: 1.2rem;
-    }
-
-    .season-banner-images img {
-        width: 120px;
-        height: 175px;
-    }
-
-    .season-banner-text h2 {
-        font-size: 1.7rem;
-    }
+main {
+    margin-left: 5%;
+    margin-right: 5%;
 }
 
-/* ==================================================================== */
-/* =======================  MOBILE LANDSCAPE  ========================== */
-/* ==================================================================== */
+.shiori-header {
+    padding: 0.8rem 5%;
+}
+
+.nav-links {
+    gap: 0.6rem;
+}
+
+.shiori-desktop-search input {
+    width: 160px;
+}
+
+.shiori-card {
+    width: 145px;
+    height: 235px;
+}
+
+.shiori-card img {
+    height: 42%;
+}
+
+.season-banner {
+    width: 94%;
+    padding: 1.2rem;
+}
+
+.season-banner-images img {
+    width: 120px;
+    height: 175px;
+}
+
+.season-banner-text h2 {
+    font-size: 1.7rem;
+}
+
+}
+
+/* =============================================================== */
+/*                   RESPONSIVE - MOBILE                           */
+/* =============================================================== */
+
+@media (max-width: 768px) {
+
+/* Affichage du bouton burger */
+.burger-menu-btn {
+    display: flex;
+}
+
+/* Masquage du menu desktop */
+.nav-links {
+    display: none;
+}
+
+/* Header plus compact */
+.shiori-header {
+    padding: 0.5rem 4%;
+    margin-bottom: 0.6rem;
+    align-items: center;
+}
+
+/* Barre de recherche centrée et plus large */
+.shiori-desktop-search {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    margin: 0 8px;
+}
+
+.shiori-desktop-search input {
+    width: 85%;
+    max-width: 260px;
+    padding: 8px 35px;
+    font-size: 0.95rem;
+    background: #0f0f0f;
+    border: 1px solid #222;
+}
+
+.search-icon {
+    left: calc(7.5%);
+}
+
+/* Bannière saison en colonne (images au-dessus, texte en dessous) */
+.season-banner {
+    width: 100%;
+    border-radius: 8px;
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    box-shadow: none;
+}
+
+.season-banner-images {
+    width: 100%;
+    padding: 0 12px;
+    gap: 8px;
+    justify-content: center;
+}
+
+.season-banner-images img {
+    width: 22%;
+    height: 200px;
+    border-radius: 6px;
+    clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+}
+
+.season-banner-text {
+    width: 100%;
+    padding: 1rem 1rem 1.6rem 1rem;
+    text-align: center;
+}
+
+.season-banner-text h2 {
+    font-size: 1.8rem;
+}
+
+.season-banner-text p {
+    font-size: 0.95rem;
+}
+
+/* Footer mobile ajusté */
+.shiori-footer {
+    padding: 1.3rem 0;
+    margin-top: 6rem;
+    font-size: 12px;
+}
+
+}
+
+/* =============================================================== */
+/*                   RESPONSIVE - MOBILE LANDSCAPE                 */
+/* =============================================================== */
 
 @media (max-height: 480px) and (orientation: landscape) {
 
@@ -543,65 +736,57 @@ a {
         padding: 4px 0;
     }
 
-    .nav-links {
-        gap: 0.4rem;
-    }
+.nav-links {
+    gap: 0.4rem;
+}
 
-    /* Cards adaptées à la faible hauteur */
-    .shiori-card {
-        width: 125px;
-        height: 185px;
-    }
+/* Cards adaptées à la faible hauteur */
+.shiori-card {
+    width: 125px;
+    height: 185px;
+}
 
-    .shiori-card img {
-        height: 40%;
-    }
+.shiori-card img {
+    height: 40%;
+}
 
-    .card-title {
-        font-size: 11px;
-    }
+.card-title {
+    font-size: 11px;
+}
 
-    .card-info span {
-        font-size: 9px;
-    }
+.card-info span {
+    font-size: 9px;
+}
 
-    /* Carousels */
-    .carousel-anime,
-    .carousel-reprendre,
-    .carousel-sorties-jour,
-    .carousel-episodes,
-    .carousel-scans,
-    .carousel-classiques {
-        gap: 10px;
-        margin: 1rem 0;
-    }
+.carousel-anime {
+    gap: 10px;
+    margin: 1rem 0;
+}
 
-    /* Bannière saison – version ultra compacte */
-    .season-banner {
-        flex-direction: row;
-        width: 96%;
-        padding: 0.6rem;
-        min-height: 160px;
-    }
+/* Bannière saison ultra compacte */
+.season-banner {
+    flex-direction: row;
+    width: 96%;
+    padding: 0.6rem;
+    min-height: 160px;
+}
 
-    .season-banner-images img {
-        width: 95px;
-        height: 135px;
-    }
+.season-banner-images img {
+    width: 95px;
+    height: 135px;
+}
 
-    .season-banner-text h2 {
-        font-size: 1.2rem;
-    }
+.season-banner-text h2 {
+    font-size: 1.2rem;
+}
 
-    .season-banner-text p {
-        font-size: 0.8rem;
-    }
+.season-banner-text p {
+    font-size: 0.8rem;
+}
 
-    /* Footer mini */
-    .shiori-footer {
-        margin-top: 4rem;
-        font-size: 11px;
-    }
+.shiori-footer {
+    margin-top: 4rem;
+    font-size: 11px;
 }
 
 /* ================================================================ */
