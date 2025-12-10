@@ -256,25 +256,33 @@ async function fetchSeasonBanner() {
 }
 
 // ------------------------
-// MENU BURGER MOBILE
+// MENU BURGER MOBILE (CORRIGÉ)
 // ------------------------
 document.addEventListener("DOMContentLoaded", () => {
 
     const burgerBtn = document.getElementById('burgerBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileMenu = document.querySelector('.mobile-menu--top'); // <<<<< CORRIGÉ
+    const overlay = document.querySelector('.menu-overlay');
 
     if (!burgerBtn || !mobileMenu) return;
 
     burgerBtn.addEventListener('click', () => {
         burgerBtn.classList.toggle('burger-open');
         mobileMenu.classList.toggle('open');
+        overlay.classList.toggle('active');
     });
 
-    // Fermeture en cliquant sur un lien
+    overlay.addEventListener("click", () => {
+        burgerBtn.classList.remove("burger-open");
+        mobileMenu.classList.remove("open");
+        overlay.classList.remove("active");
+    });
+
     document.querySelectorAll('.mobile-link').forEach(link => {
         link.addEventListener('click', () => {
             mobileMenu.classList.remove('open');
             burgerBtn.classList.remove('burger-open');
+            overlay.classList.remove('active');
         });
     });
 
