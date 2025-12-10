@@ -49,21 +49,18 @@ a {
 
 /* Affichage Mobile */
 @media (max-width: 768px) {
-    main {
-        margin: 0 4%;
-    }
-    .nav-links {
-        flex-direction: column;
-        gap: 10px;
-    }
+  .nav-links {
+    flex-direction: column;
+    gap: 10px;
+  }
 
-    .hero-title {
-        font-size: 1.4rem;
-    }
+  .hero-title {
+    font-size: 1.4rem;
+  }
 
-    .container {
-        padding: 0 10px;
-    }
+  .container {
+    padding: 0 10px;
+  }
 }
 
 /* ------------------- */
