@@ -538,38 +538,38 @@ overflow: hidden;
 
 @media (max-width: 1024px) {
 
-main {
-    margin-left: 6%;
-    margin-right: 6%;
-}
+    main {
+        margin-left: 6%;
+        margin-right: 6%;
+    }
 
-h2 {
-    font-size: 19px;
-}
+    h2 {
+        font-size: 19px;
+    }
 
-/* Cards légèrement réduites */
-.shiori-card {
-    width: 155px;
-    height: 245px;
-}
+    /* Cards légèrement réduites */
+    .shiori-card {
+        width: 155px;
+        height: 245px;
+    }
 
-.carousel-anime {
-    gap: 18px;
-}
+    .carousel-anime {
+        gap: 18px;
+    }
 
-/* Bannière saison */
-.season-banner {
-    width: 88%;
-}
+    /* Bannière saison */
+    .season-banner {
+        width: 88%;
+    }
 
-.season-banner-images img {
-    width: 130px;
-    height: 190px;
-}
+    .season-banner-images img {
+        width: 130px;
+        height: 190px;
+    }
 
-.season-banner-text h2 {
-    font-size: 1.8rem;
-}
+    .season-banner-text h2 {
+        font-size: 1.8rem;
+    }
 
 }
 
@@ -579,45 +579,45 @@ h2 {
 
 @media (max-width: 900px) {
 
-main {
-    margin-left: 5%;
-    margin-right: 5%;
-}
+    main {
+        margin-left: 5%;
+        margin-right: 5%;
+    }
 
-.shiori-header {
-    padding: 0.8rem 5%;
-}
+    .shiori-header {
+        padding: 0.8rem 5%;
+    }
 
-.nav-links {
-    gap: 0.6rem;
-}
+    .nav-links {
+        gap: 0.6rem;
+    }
 
-.shiori-desktop-search input {
-    width: 160px;
-}
+    .shiori-desktop-search input {
+        width: 160px;
+    }
 
-.shiori-card {
-    width: 145px;
-    height: 235px;
-}
+    .shiori-card {
+        width: 145px;
+        height: 235px;
+    }
 
-.shiori-card img {
-    height: 42%;
-}
+    .shiori-card img {
+        height: 42%;
+    }
 
-.season-banner {
-    width: 94%;
-    padding: 1.2rem;
-}
+    .season-banner {
+        width: 94%;
+        padding: 1.2rem;
+    }
 
-.season-banner-images img {
-    width: 120px;
-    height: 175px;
-}
+    .season-banner-images img {
+        width: 120px;
+        height: 175px;
+    }
 
-.season-banner-text h2 {
-    font-size: 1.7rem;
-}
+    .season-banner-text h2 {
+        font-size: 1.7rem;
+    }
 
 }
 
@@ -627,89 +627,89 @@ main {
 
 @media (max-width: 768px) {
 
-/* Affichage du bouton burger */
-.burger-menu-btn {
-    display: flex;
-}
+    /* Affichage du bouton burger */
+    .burger-menu-btn {
+        display: flex;
+    }
 
-/* Masquage du menu desktop */
-.nav-links {
-    display: none;
-}
+    /* Masquage du menu desktop */
+    .nav-links {
+        display: none;
+    }
 
-/* Header plus compact */
-.shiori-header {
-    padding: 0.5rem 4%;
-    margin-bottom: 0.6rem;
-    align-items: center;
-}
+    /* Header plus compact */
+    .shiori-header {
+        padding: 0.5rem 4%;
+        margin-bottom: 0.6rem;
+        align-items: center;
+    }
 
-/* Barre de recherche centrée et plus large */
-.shiori-desktop-search {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    margin: 0 8px;
-}
+    /* Barre de recherche centrée et plus large */
+    .shiori-desktop-search {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        margin: 0 8px;
+    }
 
-.shiori-desktop-search input {
-    width: 85%;
-    max-width: 260px;
-    padding: 8px 35px;
-    font-size: 0.95rem;
-    background: #0f0f0f;
-    border: 1px solid #222;
-}
+    .shiori-desktop-search input {
+        width: 85%;
+        max-width: 260px;
+        padding: 8px 35px;
+        font-size: 0.95rem;
+        background: #0f0f0f;
+        border: 1px solid #222;
+    }
 
-.search-icon {
-    left: calc(7.5%);
-}
+    .search-icon {
+        left: calc(7.5%);
+    }
 
-/* Bannière saison en colonne (images au-dessus, texte en dessous) */
-.season-banner {
-    width: 100%;
-    border-radius: 8px;
-    min-height: 360px;
-    display: flex;
-    flex-direction: column;
-    padding: 0;
-    box-shadow: none;
-}
+    /* Bannière saison en colonne (images au-dessus, texte en dessous) */
+    .season-banner {
+        width: 100%;
+        border-radius: 8px;
+        min-height: 360px;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        box-shadow: none;
+    }
 
-.season-banner-images {
-    width: 100%;
-    padding: 0 12px;
-    gap: 8px;
-    justify-content: center;
-}
+    .season-banner-images {
+        width: 100%;
+        padding: 0 12px;
+        gap: 8px;
+        justify-content: center;
+    }
 
-.season-banner-images img {
-    width: 22%;
-    height: 200px;
-    border-radius: 6px;
-    clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
-}
+    .season-banner-images img {
+        width: 22%;
+        height: 200px;
+        border-radius: 6px;
+        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+    }
 
-.season-banner-text {
-    width: 100%;
-    padding: 1rem 1rem 1.6rem 1rem;
-    text-align: center;
-}
+    .season-banner-text {
+        width: 100%;
+        padding: 1rem 1rem 1.6rem 1rem;
+        text-align: center;
+    }
 
-.season-banner-text h2 {
-    font-size: 1.8rem;
-}
+    .season-banner-text h2 {
+        font-size: 1.8rem;
+    }
 
-.season-banner-text p {
-    font-size: 0.95rem;
-}
+    .season-banner-text p {
+        font-size: 0.95rem;
+    }
 
-/* Footer mobile ajusté */
-.shiori-footer {
-    padding: 1.3rem 0;
-    margin-top: 6rem;
-    font-size: 12px;
-}
+    /* Footer mobile ajusté */
+    .shiori-footer {
+        padding: 1.3rem 0;
+        margin-top: 6rem;
+        font-size: 12px;
+    }
 
 }
 
@@ -735,6 +735,8 @@ main {
         font-size: 12px;
         padding: 4px 0;
     }
+
+}
 
 .nav-links {
     gap: 0.4rem;
@@ -884,15 +886,13 @@ main {
     }
 
     .nav-links {
-        display: none;  /* Masquage du menu desktop */
+        display: none;
     }
 
-}
-
-@media (max-width: 768px) {
     .shiori-footer {
-        padding: 1.3rem 0;   /* taille cohérente mobile */
-        margin-top: 6rem;    /* moins d’espace pour éviter un “trop grand vide” */
-        font-size: 12px;     /* lisible mais adapté mobile */
+        padding: 1.3rem 0;
+        margin-top: 6rem;
+        font-size: 12px;
     }
+
 }
