@@ -3,8 +3,8 @@
 /* =============================================================== */
 
 @font-face {
-font-family: ‘Electroharmonix’;
-src: url(‘src/assets/fonts/Electroharmonix.woff2’) format(‘woff2’);
+font-family: 'Electroharmonix';
+src: url('src/assets/fonts/Electroharmonix.woff2') format('woff2');
 }
 
 /* =============================================================== */
@@ -12,7 +12,7 @@ src: url(‘src/assets/fonts/Electroharmonix.woff2’) format(‘woff2’);
 /* =============================================================== */
 
 body {
-font-family: ‘Quicksand’, sans-serif;
+font-family: 'Quicksand', sans-serif;
 font-size: 1rem;
 background-color: black;
 color: white;
@@ -67,7 +67,7 @@ margin-bottom: 1.5rem;
 
 /* Logo du site */
 .titre-accueil {
-font-family: ‘Electroharmonix’, ‘Quicksand’, sans-serif;
+font-family: 'Electroharmonix', 'Quicksand', sans-serif;
 font-size: 20px;
 font-weight: 700;
 margin-left: 24px;
@@ -135,7 +135,7 @@ display: flex;
 align-items: center;
 }
 
-/* Icône de recherche positionnée à l’intérieur de l’input */
+/* Icône de recherche positionnée à l'intérieur de l'input */
 .search-icon {
 position: absolute;
 left: 10px;
@@ -151,7 +151,7 @@ padding: 0.5em 1em 0.5em 35px;
 width: 200px;
 color: white;
 transition: all 0.2s;
-font-family: ‘Quicksand’, sans-serif;
+font-family: 'Quicksand', sans-serif;
 font-weight: 600;
 }
 
@@ -167,12 +167,12 @@ width: 100%;
 max-height: 200px;
 overflow-y: auto;
 z-index: 1000;
-display: none; /* Caché par défaut, géré en JavaScript */
+display: none;
 padding: 10px 15px;
 box-sizing: border-box;
 }
 
-/* Effet hover/focus sur l’input */
+/* Effet hover/focus sur l'input */
 .shiori-desktop-search input:hover,
 .shiori-desktop-search input:focus {
 border-color: #c3423f;
@@ -180,7 +180,7 @@ outline: none;
 }
 
 /* =============================================================== */
-/*                      CARDS (CARTES D’ANIME)                     */
+/*                      CARDS (CARTES D'ANIME)                     */
 /* =============================================================== */
 
 .shiori-card {
@@ -210,7 +210,7 @@ height: 45%;
 object-fit: cover;
 }
 
-/* Titre de l’anime/manga */
+/* Titre de l'anime/manga */
 .card-title {
 text-align: center;
 font-weight: 600;
@@ -363,7 +363,7 @@ gap: 10px;
 z-index: 2;
 }
 
-/* ✅ CORRECTION : Remplacement de parallelogram() par polygon() */
+/* Découpe diagonale pour un effet visuel moderne */
 .season-banner-images img {
 height: 220px;
 width: 140px;
@@ -371,12 +371,7 @@ object-fit: cover;
 border-radius: 6px;
 cursor: pointer;
 transition: transform .3s ease, filter .3s ease;
-
-```
-/* Découpe diagonale pour un effet visuel moderne */
 clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
-```
-
 }
 
 .season-banner-images img:hover {
@@ -403,7 +398,7 @@ font-weight: 800;
 letter-spacing: 1px;
 color: white;
 text-transform: uppercase;
-font-family: ‘Electroharmonix’, ‘Quicksand’, sans-serif;
+font-family: 'Electroharmonix', 'Quicksand', sans-serif;
 }
 
 .season-banner-text p {
@@ -412,7 +407,7 @@ font-size: 1.05rem;
 font-weight: 600;
 color: #d8d8d8;
 line-height: 1.3;
-font-family: ‘Quicksand’, sans-serif;
+font-family: 'Quicksand', sans-serif;
 }
 
 /* =============================================================== */
@@ -451,7 +446,7 @@ opacity: 0;
 transform: translateY(-10px) rotate(-45deg);
 }
 
-/* ✅ Overlay global (assombrit la page quand le menu est ouvert) */
+/* Overlay global (assombrit la page quand le menu est ouvert) */
 .menu-overlay {
 position: fixed;
 inset: 0;
@@ -469,10 +464,10 @@ opacity: 1;
 pointer-events: all;
 }
 
-/* ✅ Menu mobile qui slide depuis le HAUT avec effet glassmorphism */
+/* Menu mobile qui slide depuis le HAUT avec effet glassmorphism */
 .mobile-menu–top {
 position: fixed;
-top: -100vh; /* Caché au-dessus de l’écran */
+top: -100vh;
 left: 0;
 width: 100%;
 height: 65vh;
@@ -509,7 +504,7 @@ padding-bottom: 0.8rem;
 .mobile-menu-title {
 font-size: 1.4rem;
 font-weight: 700;
-font-family: ‘Electroharmonix’, ‘Quicksand’, sans-serif;
+font-family: 'Electroharmonix', 'Quicksand', sans-serif;
 }
 
 /* Liens du menu mobile */
@@ -527,7 +522,7 @@ transition: 0.2s;
 color: #C3423F;
 }
 
-/* ✅ CORRECTION : Décommenté pour empêcher le scroll du body quand le menu est ouvert */
+/* Empêcher le scroll du body quand le menu est ouvert */
 body.no-scroll {
 overflow: hidden;
 }
@@ -538,7 +533,6 @@ overflow: hidden;
 
 @media (max-width: 1024px) {
 
-```
 main {
     margin-left: 6%;
     margin-right: 6%;
@@ -571,7 +565,6 @@ h2 {
 .season-banner-text h2 {
     font-size: 1.8rem;
 }
-```
 
 }
 
@@ -581,7 +574,6 @@ h2 {
 
 @media (max-width: 900px) {
 
-```
 main {
     margin-left: 5%;
     margin-right: 5%;
@@ -621,7 +613,6 @@ main {
 .season-banner-text h2 {
     font-size: 1.7rem;
 }
-```
 
 }
 
@@ -631,7 +622,6 @@ main {
 
 @media (max-width: 768px) {
 
-```
 /* Affichage du bouton burger */
 .burger-menu-btn {
     display: flex;
@@ -715,7 +705,6 @@ main {
     margin-top: 6rem;
     font-size: 12px;
 }
-```
 
 }
 
@@ -725,7 +714,6 @@ main {
 
 @media (max-height: 480px) and (orientation: landscape) {
 
-```
 main {
     margin-left: 3%;
     margin-right: 3%;
@@ -799,6 +787,5 @@ main {
 .mobile-menu--top {
     height: 75vh;
 }
-```
 
 }
