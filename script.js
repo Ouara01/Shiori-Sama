@@ -33,7 +33,7 @@ query ($page: Int, $perPage: Int, $sort: [MediaSort]) {
 }
 
 // ------------------------
-// Fetch AniList via POST
+// Fetch AniList
 // ------------------------
 async function fetchAniList(type = 'ANIME', sort = ['SCORE_DESC'], page = 1, perPage = 12) {
   try {
@@ -45,11 +45,10 @@ async function fetchAniList(type = 'ANIME', sort = ['SCORE_DESC'], page = 1, per
         variables: { page, perPage, sort }
       })
     });
+
     const data = await response.json();
-    if (data.errors) {
-      console.error('AniList API error:', data.errors);
-      return [];
-    }
+    if (data.errors) return [];
+
     return data.data.Page.media.map(m => ({
       title: m.title.userPreferred,
       image_url: m.coverImage.large || m.coverImage.medium,
@@ -60,6 +59,7 @@ async function fetchAniList(type = 'ANIME', sort = ['SCORE_DESC'], page = 1, per
       type: m.type,
       language: m.staff?.edges[0]?.node.language || "JP"
     }));
+
   } catch (err) {
     console.error('Erreur fetch AniList:', err);
     return [];
@@ -67,29 +67,36 @@ async function fetchAniList(type = 'ANIME', sort = ['SCORE_DESC'], page = 1, per
 }
 
 // ------------------------
-// Fetch sorties du jour via Jikan
+// Fetch Jikan sorties du jour
 // ------------------------
 async function fetchJikanDaily() {
   try {
     const today = new Date();
-    const weekday = today.getDay(); // 0 = dimanche
+    const weekday = today.getDay();
     const jikanWeekdays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+
     const response = await fetch(`https://api.jikan.moe/v4/schedules/${jikanWeekdays[weekday]}`);
     const data = await response.json();
     if (!data.data) return [];
+
     return data.data
       .filter(item => item.rating !== "Rx")
       .map(m => ({
         title: m.title,
         image_url: m.images.jpg.image_url,
-        startDate: { year: today.getFullYear(), month: today.getMonth()+1, day: today.getDate() },
-        averageScore: m.score ? m.score*10 : 0,
+        startDate: {
+          year: today.getFullYear(),
+          month: today.getMonth() + 1,
+          day: today.getDate()
+        },
+        averageScore: m.score ? m.score * 10 : 0,
         popularity: m.members || 0,
         seasonEpisode: m.episodes ? `E${m.episodes}` : "",
         type: m.type.toUpperCase(),
         language: "JP"
       }))
       .filter(item => item.averageScore >= 70 && item.popularity >= 1000);
+
   } catch (err) {
     console.error('Erreur fetch Jikan:', err);
     return [];
@@ -101,12 +108,12 @@ async function fetchJikanDaily() {
 // ------------------------
 function getFlagEmoji(language) {
   const map = {
-      "JAPANESE": "🇯🇵",
-      "ENGLISH": "🇺🇸",
-      "FRENCH": "🇫🇷",
-      "JP": "🇯🇵",
-      "EN": "🇺🇸",
-      "FR": "🇫🇷"
+    "JAPANESE": "🇯🇵",
+    "ENGLISH": "🇺🇸",
+    "FRENCH": "🇫🇷",
+    "JP": "🇯🇵",
+    "EN": "🇺🇸",
+    "FR": "🇫🇷"
   };
   return map[language.toUpperCase()] || "🏳️";
 }
@@ -115,41 +122,45 @@ function getFlagEmoji(language) {
 // Créer une card
 // ------------------------
 function createCard(item) {
-    const card = document.createElement('div');
-    card.className = 'shiori-card';
+  const card = document.createElement('div');
+  card.className = 'shiori-card';
 
-    card.innerHTML = `
+  card.innerHTML = `
       <img src="${item.image_url}" alt="${item.title}">
       <div class="card-title">${item.title}</div>
       <div class="card-type">${item.type || "ANIME"}</div>
       <div class="card-language">${getFlagEmoji(item.language || "JP")}</div>
       ${item.seasonEpisode ? `<div class="card-info"><span class="season-episode">${item.seasonEpisode}</span></div>` : ""}
-    `;
-    
-    return card;
+  `;
+
+  return card;
 }
 
 // ------------------------
-// Afficher la date du jour
+// Date du jour
 // ------------------------
 function setDateTitle() {
   const dateTitle = document.getElementById('date-title');
   const now = new Date();
+
   const jours = ['DIMANCHE','LUNDI','MARDI','MERCREDI','JEUDI','VENDREDI','SAMEDI'];
+
   const jour = jours[now.getDay()];
   const jourNum = String(now.getDate()).padStart(2,'0');
   const mois = String(now.getMonth() + 1).padStart(2,'0');
+
   dateTitle.textContent = `SORTIES DU ${jour} - ${jourNum}/${mois}`;
-  return { year: now.getFullYear(), month: now.getMonth() + 1, day: now.getDate() };
 }
 
 // ------------------------
-// Remplir tous les carousels
+// Remplir les carousels
 // ------------------------
 async function fillCarousels() {
-  const today = setDateTitle();
+
+  setDateTitle();
 
   for (const c of carousels) {
+
     const container = document.getElementById(c.id);
 
     if (c.fromStorage) {
@@ -166,11 +177,15 @@ async function fillCarousels() {
       items = await fetchJikanDaily();
     } else {
       let sort = ['SCORE_DESC'];
-      if (c.id === 'carousel-episodes' || c.id === 'carousel-scans') sort = ['POPULARITY_DESC'];
-      if (c.id === 'carousel-classiques') sort = ['SCORE_DESC'];
-      items = await fetchAniList(c.type, sort, 1, c.perPage || 12);
 
-      items = items.filter(item => item.averageScore >= 70 && item.popularity >= 500);
+      if (c.id === 'carousel-episodes' || c.id === 'carousel-scans')
+        sort = ['POPULARITY_DESC'];
+
+      const data = await fetchAniList(c.type, sort, 1, c.perPage || 12);
+
+      items = data.filter(item =>
+        item.averageScore >= 70 && item.popularity >= 500
+      );
 
       if (c.id === 'carousel-classiques') {
         items = items.filter(item => item.popularity >= 5000);
@@ -182,13 +197,14 @@ async function fillCarousels() {
 }
 
 // ------------------------
-// BANNIÈRE SAISON
+// Bannière de la saison
 // ------------------------
 async function fetchSeasonBanner() {
   try {
     const today = new Date();
-    let season;
     const month = today.getMonth() + 1;
+
+    let season;
     if (month >= 3 && month <= 5) season = 'SPRING';
     else if (month >= 6 && month <= 8) season = 'SUMMER';
     else if (month >= 9 && month <= 11) season = 'FALL';
@@ -197,21 +213,20 @@ async function fetchSeasonBanner() {
     const year = today.getFullYear();
 
     const query = `
-    query ($year: Int, $season: MediaSeason, $perPage: Int) {
-      Page(page: 1, perPage: $perPage) {
-        media(seasonYear: $year, season: $season, sort: POPULARITY_DESC, type: ANIME) {
-          id
-          title { userPreferred }
-          coverImage { large }
-          siteUrl
+      query ($year: Int, $season: MediaSeason, $perPage: Int) {
+        Page(page: 1, perPage: $perPage) {
+          media(seasonYear: $year, season: $season, sort: POPULARITY_DESC, type: ANIME) {
+            title { userPreferred }
+            coverImage { large }
+            siteUrl
+          }
         }
       }
-    }
     `;
 
     const response = await fetch('https://graphql.anilist.co', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         query,
         variables: { year, season, perPage: 6 }
@@ -219,10 +234,6 @@ async function fetchSeasonBanner() {
     });
 
     const data = await response.json();
-    if (data.errors) {
-      console.error('AniList API error:', data.errors);
-      return;
-    }
 
     const bannerContainer = document.getElementById('season-banner-images');
     bannerContainer.innerHTML = '';
@@ -231,21 +242,16 @@ async function fetchSeasonBanner() {
       const img = document.createElement('img');
       img.src = anime.coverImage.large;
       img.alt = anime.title.userPreferred;
-      img.title = anime.title.userPreferred;
-
-      // ---- AJOUT POUR LA BANNIÈRE ----
       img.loading = "lazy";
       img.decoding = "async";
-      // --------------------------------
 
-      img.onclick = () => {
-        window.open(anime.siteUrl, '_blank');
-      };
+      img.onclick = () => window.open(anime.siteUrl, '_blank');
+
       bannerContainer.appendChild(img);
     });
 
   } catch (err) {
-    console.error('Erreur fetch season banner:', err);
+    console.error("Erreur fetch season banner:", err);
   }
 }
 
@@ -254,15 +260,17 @@ async function fetchSeasonBanner() {
 // ------------------------
 document.addEventListener("DOMContentLoaded", () => {
 
-    const burgerBtn = document.getElementById('burger-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    if (!burgerBtn || !mobileMenu) return;
 
     burgerBtn.addEventListener('click', () => {
         burgerBtn.classList.toggle('burger-open');
         mobileMenu.classList.toggle('open');
     });
 
-    // Fermeture du menu en cliquant sur un lien
+    // Fermeture en cliquant sur un lien
     document.querySelectorAll('.mobile-link').forEach(link => {
         link.addEventListener('click', () => {
             mobileMenu.classList.remove('open');
@@ -272,12 +280,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-
 // ------------------------
-// Lancement au chargement complet
+// Lancement
 // ------------------------
 window.addEventListener('DOMContentLoaded', () => {
   fillCarousels();
   fetchSeasonBanner();
-  document.getElementById('date-copyright').textContent = new Date().getFullYear();
+  document.getElementById('date-copyright').textContent =
+    new Date().getFullYear();
 });
