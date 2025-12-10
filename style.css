@@ -342,7 +342,7 @@ a {
   border: 1px solid rgba(255,255,255,0.08);
 }
 
-/* --- Overlay sombre sur les images (comme Anime-Sama) --- */
+/* --- Overlay sombre sur les images --- */
 .season-banner-overlay {
   position: absolute;
   inset: 0;
@@ -374,7 +374,7 @@ a {
   cursor: pointer;
   transition: transform .3s ease, filter .3s ease;
 
-  /* Découpe diagonale comme Anime-Sama */
+  /* Découpe diagonale */
   clip-path: parallelogram(
       8% 0,
       100% 0,
@@ -599,7 +599,7 @@ a {
 }
 
 /* ================================================================ */
-/* ========================  MENU BURGER  ========================== */
+/* ========================  MENU BURGER  (ORIGINAL) =============== */
 /* ================================================================ */
 
 /* Bouton burger visible uniquement mobile */
@@ -634,11 +634,12 @@ a {
     transform: translateY(-10px) rotate(-45deg);
 }
 
-/* MENU SLIDE DÉROULANT */
+/* MENU SLIDE DÉROULANT (ancienne version latérale conservée mais neutralisée pour éviter conflit) */
 .mobile-menu {
+    /* ancienne config volontairement neutralisée pour éviter doublons */
     position: fixed;
     top: 0;
-    left: -260px; /* caché */
+    left: -260px; /* caché (ne sera pas utilisé en mobile override) */
     width: 260px;
     height: 100vh;
     background: #0b0b0b;
@@ -646,10 +647,6 @@ a {
     box-shadow: 0 0 15px rgba(0,0,0,0.4);
     transition: left 0.35s ease;
     z-index: 1001;
-}
-
-.mobile-menu.open {
-    left: 0;
 }
 
 /* Contenu du menu */
@@ -703,5 +700,175 @@ a {
         padding: 1.3rem 0;   /* taille cohérente mobile */
         margin-top: 6rem;    /* moins d’espace pour éviter un “trop grand vide” */
         font-size: 12px;     /* lisible mais adapté mobile */
+    }
+}
+
+/* ============================================================= */
+/* ====================  AJOUTS POUR MOBILE  =================== */
+/* ============================================================= */
+
+/* Overlay global (assombrit la page quand menu ouvert) */
+.menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.0); /* invisible par défaut */
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    z-index: 999; /* sous le menu (menu z-index 1000) */
+}
+
+/* active => visible */
+.menu-overlay.active {
+    background: rgba(0,0,0,0.35);
+    opacity: 1;
+    pointer-events: all;
+}
+
+/* Nouveau menu mobile : slide depuis le HAUT + glassmorphism */
+.mobile-menu--top {
+    position: fixed;
+    top: -100vh; /* caché au-dessus */
+    left: 0;
+    width: 100%;
+    height: 65vh; /* hauteur du panneau */
+    background: rgba(10, 10, 10, 0.55);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    transition: top 0.45s cubic-bezier(.2,.9,.2,1), opacity 0.35s ease;
+    opacity: 0;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+/* Lorsque actif */
+.mobile-menu--top.open {
+    top: 0;
+    opacity: 1;
+}
+
+/* Contenu interne — reprend la structure existante mais adaptée à la nouvelle hauteur */
+.mobile-menu--top .mobile-menu-content {
+    padding: 3rem 1.25rem 1rem 1.25rem;
+    height: calc(65vh - 3rem);
+    overflow-y: auto;
+}
+
+/* Assure que le bouton burger reste visible au-dessus du menu pour le fermer */
+.burger-menu-btn {
+    position: relative;
+    z-index: 1100; /* plus haut que le menu */
+}
+
+/* Header plus compact sur mobile */
+@media (max-width: 768px) {
+
+    .shiori-header {
+        padding: 0.5rem 4%;
+        margin-bottom: 0.6rem;
+        align-items: center;
+    }
+
+    /* Barre de recherche centrée et plus large */
+    .shiori-desktop-search {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        margin: 0 8px;
+    }
+
+    .shiori-desktop-search input {
+        width: 85%;
+        max-width: 260px;
+        padding: 8px 35px;
+        font-size: 0.95rem;
+        background: #0f0f0f;
+        border: 1px solid #222;
+    }
+
+    .search-icon {
+        left: calc(7.5%);
+    }
+
+    /* Affichage: burger visible, nav-links masquées */
+    .burger-menu-btn {
+        display: flex;
+    }
+
+    .nav-links {
+        display: none;
+    }
+
+    /* Bannière saison adaptée mobile (images + texte sous les images) */
+    .season-banner {
+        width: 100%;
+        border-radius: 8px;
+        min-height: 360px;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        box-shadow: none;
+    }
+
+    .season-banner-images {
+        width: 100%;
+        padding: 0 12px;
+        gap: 8px;
+        justify-content: center;
+    }
+
+    .season-banner-images img {
+        width: 22%;
+        height: 200px;
+        border-radius: 6px;
+        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+    }
+
+    .season-banner-text {
+        width: 100%;
+        padding: 1rem 1rem 1.6rem 1rem;
+        text-align: center;
+    }
+
+    .season-banner-text h2 {
+        font-size: 1.8rem;
+    }
+
+    .season-banner-text p {
+        font-size: 0.95rem;
+    }
+
+    /* Footer mobile ajusté */
+    .shiori-footer {
+        padding: 1.3rem 0;
+        margin-top: 6rem;
+        font-size: 12px;
+    }
+}
+
+/* Petite amélioration UX: empêcher le scroll du body quand menu top est ouvert.
+body.no-scroll {
+    overflow: hidden;
+}
+
+/* Small screens landscape tweaks */
+@media (max-height: 480px) and (orientation: landscape) {
+    .mobile-menu--top {
+        height: 75vh;
+    }
+}
+
+/* Keep original mobile menu classes for backwards compatibility but hide them on small screens
+   to avoid unexpected behaviour — we will use .mobile-menu--top as the active panel. */
+@media (max-width: 768px) {
+    .mobile-menu {
+        left: 0;                /* neutralize lateral behaviour */
+        top: -100vh;
+        width: 100%;
+        height: 0;
+        opacity: 0;
+        pointer-events: none;
     }
 }
