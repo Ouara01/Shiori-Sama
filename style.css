@@ -470,7 +470,7 @@ pointer-events: all;
 }
 
 /* Menu mobile qui slide depuis le HAUT avec effet glassmorphism */
-.mobile-menu–top {
+.mobile-menu-top {
 position: fixed;
 top: -100vh;
 left: 0;
@@ -487,7 +487,7 @@ overflow: hidden;
 }
 
 /* État ouvert du menu */
-.mobile-menu–top.open {
+.mobile-menu-top.open {
 top: 0;
 opacity: 1;
 }
