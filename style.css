@@ -384,7 +384,8 @@ filter: brightness(1.15);
 .season-banner-text {
 position: relative;
 z-index: 5;
-width: 300px;
+width: auto;
+height: auto;
 padding-right: 30px;
 text-align: center;
 display: flex;
@@ -426,7 +427,6 @@ font-family: 'Quicksand', sans-serif;
     .shiori-header {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         padding: 0.3rem 0.3rem;
         margin-bottom: 0.6rem;
     }
@@ -435,7 +435,7 @@ font-family: 'Quicksand', sans-serif;
         display: flex;
         align-items: flex-start;
         text-align: center;
-        font-size: 1.4rem;
+        font-size: 1rem;
         padding: 4px 4px;
     }
 
@@ -516,7 +516,6 @@ font-family: 'Quicksand', sans-serif;
     .season-banner-text {
         display: flex;
         flex-direction: column;
-        width: 100%;
         padding: 1rem 1rem 1.6rem 1rem;
         text-align: center;
     }
@@ -580,6 +579,8 @@ font-family: 'Quicksand', sans-serif;
         width: 100%;
         padding: 0.6rem;
         min-height: 160px;
+        margin-left: 5%;
+        margin-right: 5%;
     }
 
     #season-banner-images img {
