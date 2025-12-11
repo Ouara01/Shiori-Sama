@@ -61,7 +61,8 @@ font-weight: 700;
 display: flex;
 align-items: center;
 justify-content: space-between;
-border-bottom: 1px solid white;
+padding: 0.5rem;
+border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 margin-bottom: 1.5rem;
 }
 
@@ -194,25 +195,27 @@ height: 275px;
 flex: 0 0 auto;
 display: flex;
 flex-direction: column;
-background-color: rgba(51, 51, 51, 0.6);
-border: 1px solid #333;
-border-radius: 10px;
+background-color: rgba(195, 66, 63, 0.15);
+border: 1px solid rgba(195, 66, 63, 0.25);
+border-top: none;
+border-radius: 8px;
 overflow: hidden;
 scroll-snap-align: start;
 position: relative;
 transition: transform 0.2s ease-in-out;
-}
-
-/* Effet zoom au survol */
-.shiori-card:hover {
-transform: scale(1.05);
+cursor: pointer;
 }
 
 /* Image de couverture */
 .shiori-card img {
 width: 100%;
-height: 45%;
+height: 50%;
 object-fit: cover;
+}
+
+/* Effet zoom au survol */
+.shiori-card img:hover {
+transform: scale(1.02);
 }
 
 /* Titre de l'anime/manga */
@@ -234,12 +237,12 @@ text-overflow: ellipsis;
 position: absolute;
 top: 8px;
 left: 8px;
-background-color: rgba(255, 255, 255, 0.6);
+background-color: rgba(255, 255, 255, 0.7);
 color: black;
 font-size: 10px;
 font-weight: 700;
-padding: 2px 6px;
-border-radius: 6px;
+padding: 3px 6px;
+border-radius: 4px;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -251,16 +254,23 @@ min-width: 30px;
 position: absolute;
 top: 8px;
 right: 8px;
-background-color: rgba(255, 255, 255, 0.6);
+background-color: rgba(255, 255, 255, 0.7);
 color: black;
 font-size: 10px;
 font-weight: 700;
-padding: 2px 6px;
-border-radius: 6px;
+padding: 4px 6px;
+border-radius: 4px;
 display: flex;
 align-items: center;
 justify-content: center;
 min-width: 24px;
+}
+
+.card-language .fi {
+    width: 20px;
+    height: 16px;
+    border-radius: 3px;
+    object-fit: cover;
 }
 
 /* Informations supplémentaires (saison/épisode) en bas */
@@ -306,15 +316,17 @@ display: none;
 
 .shiori-footer {
 width: 100%;
-padding: 4rem 0;
+padding: 10rem 0;
 padding-bottom: 0.5rem;
 padding-left: 0.5rem;
 border-top: 1px solid white;
 margin-top: 10rem;
+margin-left: 12%;
+margin-right: 12%;
 font-size: 14px;
 color: #888;
 display: flex;
-justify-content: left;
+justify-content: center;
 text-align: bottom;
 }
 
@@ -341,21 +353,7 @@ display: flex;
 align-items: center;
 gap: 0;
 box-shadow: 0 0 25px rgba(0,0,0,0.6);
-border: 1px solid rgba(255,255,255,0.08);
-}
-
-/* Overlay sombre pour améliorer la lisibilité du texte */
-.season-banner-overlay {
-position: absolute;
-inset: 0;
-background: linear-gradient(
-90deg,
-rgba(0,0,0,0.65) 0%,
-rgba(0,0,0,0.4) 40%,
-rgba(0,0,0,0) 100%
-);
-pointer-events: none;
-z-index: 3;
+border: 1px solid rgba(195, 66, 63, 0.6);
 }
 
 /* Conteneur des images de la bannière */
@@ -428,32 +426,58 @@ font-family: 'Quicksand', sans-serif;
 
     /* Header plus compact */
     .shiori-header {
-        padding: 0.4rem 4%;
-        margin-bottom: 0.6rem;
+        display: flex;
+        flex-direction: row;
         align-items: center;
+        justify-content: space-between;
+        padding: 0.3rem 0.3rem;
+        margin-bottom: 0.6rem;
     }
     
     .titre-accueil {
         display: flex;
-        text-align: center left;
-        font-size: 12px;
+        align-items: flex-start;
+        text-align: center;
+        font-size: 1.4rem;
         padding: 4px 4px;
     }
 
     /* Barre de recherche centrée et plus large */
-    .shiori-desktop-search {
+    .shiori-mobile-search {
         flex: 1;
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
+        align-items: center;
         margin: 0 8px;
     }
 
-    .shiori-desktop-search input {
-        width: 150px;
-        padding: 8px 35px;
-        font-size: 0.95rem;
-        background: #0f0f0f;
-        border: 1px solid #222;
+    .shiori-mobile-search input {
+        background: #111;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 0.5em 1em 0.5em 32px; 
+        width: 125px;
+        color: white;
+        transition: all 0.2s;
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 600;
+    }
+
+    /* Conteneur des résultats de recherche (affiché/masqué via JS) */
+    #shiori-result-mobile {
+        position: absolute;
+        top: 60px;
+        left: 0;
+        background-color: #111;
+        border: 1px solid #333;
+        border-radius: 8px;
+        width: 100%;
+        max-height: 100px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        padding: 10px 15px;
+        box-sizing: border-box;
     }
 
     .search-icon {
@@ -462,7 +486,7 @@ font-family: 'Quicksand', sans-serif;
 
     /* Bannière saison en colonne (images au-dessus, texte en dessous) */
     .season-banner {
-        width: 95%;
+        width: 100%;
         border-radius: 8px;
         min-height: 360px;
         display: flex;
@@ -471,7 +495,7 @@ font-family: 'Quicksand', sans-serif;
         box-shadow: none;
     }
 
-    .season-banner-images {
+    #season-banner-images {
         width: 100%;
         padding: 0 12px;
         gap: 8px;
@@ -503,6 +527,9 @@ font-family: 'Quicksand', sans-serif;
 
     /* Footer mobile ajusté */
     .shiori-footer {
+        display: flex;
+        justify-content: center;
+        text-align: center;
         padding: 1.3rem 0;
         margin-top: 6rem;
         font-size: 12px;
@@ -515,32 +542,28 @@ font-family: 'Quicksand', sans-serif;
 
     /* Header plus compact */
     .shiori-header {
+        display: flex;
         flex-direction: row;
         align-items: center;
         padding: 0.3rem 3%;
     }
 
-    .titre-accueil {
-        font-size: 12px;
-        padding: 4px 0;
-    }
-
     /* Cards adaptées à la faible hauteur */
     .shiori-card {
-        width: 125px;
-        height: 185px;
+        width: 175px;
+        height: 275px;
     }
 
     .shiori-card img {
-        height: 40%;
+        height: 55%;
     }
 
     .card-title {
-        font-size: 11px;
+        font-size: 12px;
     }
 
     .card-info span {
-        font-size: 9px;
+        font-size: 10px;
     }
 
     .carousel-anime {
@@ -551,12 +574,12 @@ font-family: 'Quicksand', sans-serif;
     /* Bannière saison ultra compacte */
     .season-banner {
         flex-direction: row;
-        width: 90%;
+        width: 100%;
         padding: 0.6rem;
         min-height: 160px;
     }
 
-    .season-banner-images img {
+    #season-banner-images img {
         width: 95px;
         height: 135px;
     }
@@ -572,6 +595,8 @@ font-family: 'Quicksand', sans-serif;
     .shiori-footer {
         margin-top: 4rem;
         font-size: 11px;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
     }
 
     /* ================================================================ */
@@ -582,12 +607,18 @@ font-family: 'Quicksand', sans-serif;
     .burger-menu-btn {
         display: flex;
         width: 28px;
-        height: 28px;
+        height: 20px;
         flex-direction: column;
         justify-content: space-between;
         cursor: pointer;
         z-index: 1002;
         padding: 4px;
+    }
+
+    .burger-menu-btn.active {
+        color: #C3423F;
+        transform: translateY(-1px);
+        transition: all 0.3s;
     }
     
     .burger-menu-btn span {
@@ -616,7 +647,7 @@ font-family: 'Quicksand', sans-serif;
         top: 60px; /* caché */
         left: 0;
         width: 100%;
-        height: 50vh;
+        height: 100vh;
         background: rgba(10, 10, 10, 0.55);
         backdrop-filter: blur(8px);
         border-bottom: 1px solid rgba(255,255,255,0.06);
@@ -636,25 +667,44 @@ font-family: 'Quicksand', sans-serif;
     }
     
     .mobile-menu-header {
-        margin-bottom: 2rem;
+        margin-bottom: 0.5rem;
         border-bottom: 1px solid rgba(255,255,255,0.2);
-        padding-bottom: 0.8rem;
+        padding: 0.8rem;
     }
     
     /* Titre du menu */
     .mobile-menu-title {
         display: flex;
+        justify-content: flex-end;
         text-align: center;
         font-size: 1.4rem;
         font-weight: 700;
         font-family: 'Electroharmonix', 'Quicksand', sans-serif;
     }
+
+    .nav-mobile-menu {
+        display: flex;
+        flex-direction: column;
+        margin-top: 1rem;
+    }
+
+    .nav-mobile-icon {
+        width: 20px;
+        height: 20px;
+        object-fit: contain;
+        vertical-align: top;
+        padding-right: 8px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        
+    }
     
     /* Liens */
     .mobile-link {
         display: flex;
-        text-align: center right;
         justify-content: space-between;
+        text-align: center;
         font-size: 1.1rem;
         padding: 0.8rem 0;
         color: white;
@@ -663,9 +713,14 @@ font-family: 'Quicksand', sans-serif;
         transition: 0.2s;
     }
 
+    .mobile-link.active {
+        color: #C3423F;
+        transition: all 0.3s;
+    }
+
     /* Empêcher le scroll du body quand le menu est ouvert */
     body.no-scroll {
-    overflow: hidden;
+        overflow: hidden;
     }
 
 }
@@ -757,4 +812,20 @@ font-family: 'Quicksand', sans-serif;
         font-size: 1.7rem;
     }
 
+}
+
+/* MASQUAGE DU MENU MOBILE SUR PC */
+
+@media (min-width: 769px) {
+    .burger-menu-btn {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: none;
+    }
+
+    .shiori-mobile-search {
+        display: none;
+    }
 }

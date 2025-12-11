@@ -7,7 +7,10 @@
 
 <title>Shiori-Sama - Streaming</title>
 
+<!-- STYLESHEETS -->
 <link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flag-icons/css/flag-icons.min.css">
+
 
 <!-- FONT -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,6 +33,17 @@
 
 <nav>
 
+    <!-- Barre de recherche mobile -->
+    <div class="shiori-mobile-search">
+        <img src="src/assets/icons/magnifying-glass-search-svgrepo-com.svg" alt="Search" class="search-icon"/>
+        <input type="text" placeholder="Rechercher..."/>
+
+        <!-- Conteneur des résultats de recherche (affiché dynamiquement via JS) -->
+        <div id="shiori-result-mobile">
+            <p>Résultats de recherche...</p>
+        </div>
+    </div>
+
     <!-- BOUTON BURGER (visible uniquement sur mobile) -->
     <div class="burger-menu-btn" id="burgerBtn">
         <span></span>
@@ -45,9 +59,18 @@
         </div>
 
         <div class="mobile-menu-content">
-            <a href="#" class="mobile-link">Catalogue</a>
-            <a href="#" class="mobile-link">Planning</a>
-            <a href="#" class="mobile-link">Profil</a>
+            <a href="#" class="mobile-link">
+                <img src="src/assets/icons/cards.svg" alt="Catalogue" class="nav-mobile-icon"/>
+                <span>Catalogue</span>
+            </a>
+            <a href="#" class="mobile-link">
+                <img src="src/assets/icons/calendar.svg" alt="Planning" class="nav-mobile-icon"/>
+                <span>Planning</span>
+            </a>
+            <a href="#" class="mobile-link">
+                <img src="src/assets/icons/user-square.svg" alt="Profil" class="nav-mobile-icon"/>
+                <span>Profil</span>
+            </a>
         </div>
     </div>
 
@@ -61,13 +84,6 @@
 
             <!-- Conteneur des résultats de recherche (affiché dynamiquement via JS) -->
             <div id="shiori-result-desktop">
-                <p>Résultats de recherche...</p>
-                <p>Résultats de recherche...</p>
-                <p>Résultats de recherche...</p>
-                <p>Résultats de recherche...</p>
-                <p>Résultats de recherche...</p>
-                <p>Résultats de recherche...</p>
-                <p>Résultats de recherche...</p>
                 <p>Résultats de recherche...</p>
             </div>
         </div>
@@ -102,10 +118,8 @@
 
 <section class="season-banner-wrapper">
     <section class="season-banner">
-        <!-- Overlay sombre sur les images -->
-        <div class="season-banner-overlay"></div>
 
-<!-- Images injectées dynamiquement via JavaScript -->
+        <!-- Images injectées dynamiquement via JavaScript -->
         <div class="season-banner-images" id="season-banner-images">
             <!-- Les images de la saison actuelle apparaîtront ici -->
         </div>

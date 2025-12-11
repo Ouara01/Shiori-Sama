@@ -28,19 +28,19 @@ const carousels = [
     id: 'carousel-episodes',
     type: 'ANIME',
     filter: 'POPULARITY_DESC',
-    perPage: 12
+    perPage: 50
   },
   {
     id: 'carousel-scans',
     type: 'MANGA',
     filter: 'POPULARITY_DESC',
-    perPage: 12
+    perPage: 50
   },
   {
     id: 'carousel-classiques',
     type: 'ANIME',
     filter: 'SCORE_DESC',
-    perPage: 12
+    perPage: 50
   }
 ];
 
@@ -205,17 +205,18 @@ async function fetchJikanDaily() {
 - @param {string} language - Code langue (ex: "JAPANESE", "JP")
 - @returns {string} Emoji du drapeau correspondant
 */
-function getFlagEmoji(language) {
+function getFlagClass(language) {
   const map = {
-    "JAPANESE": "🇯🇵",
-    "ENGLISH": "🇺🇸",
-    "FRENCH": "🇫🇷",
-    "JP": "🇯🇵",
-    "EN": "🇺🇸",
-    "FR": "🇫🇷"
+    "JAPANESE": "fi fi-jp",
+    "ENGLISH": "fi fi-us",
+    "FRENCH": "fi fi-fr",
+    "JP": "fi fi-jp",
+    "EN": "fi fi-us",
+    "FR": "fi fi-fr"
   };
-  return map[language.toUpperCase()] || "🏳️";
+  return map[language.toUpperCase()] || "fi fi-xx"; // drapeau générique si inconnu
 }
+
 
 /* =============================================================== */
 /*                   CRÉATION D'UNE CARD (CARTE ANIME)             */
@@ -236,12 +237,11 @@ function createCard(item) {
     <img src="${item.image_url}" alt="${item.title}" loading="lazy">
     <div class="card-title">${item.title}</div>
     <div class="card-type">${item.type || "ANIME"}</div>
-    <div class="card-language">${getFlagEmoji(item.language)}</div>
+    <div class="card-language"><span class="${getFlagClass(item.language)}"></span></div>
     <div class="card-info">
       <span>${item.seasonEpisode || "N/A"}</span>
     </div>
   `;
-
   return card;
 }
 
@@ -288,7 +288,7 @@ async function fillCarousels() {
 
     const container = document.getElementById(c.id);
 
-    // ✅ Gestion du carousel "Reprenez votre visionnage"
+    // Gestion du carousel "Reprenez votre visionnage"
     if (c.fromStorage) {
       const stored = localStorage.getItem('lastWatched');
       
@@ -304,11 +304,11 @@ async function fillCarousels() {
 
     let items = [];
 
-    // ✅ Si carousel "Sorties du jour", utilise l'API Jikan
+    // Si carousel "Sorties du jour", utilise l'API Jikan
     if (c.daily) {
       items = await fetchJikanDaily();
     } 
-    // ✅ Sinon, utilise AniList avec les filtres appropriés
+    // Sinon, utilise AniList avec les filtres appropriés
     else {
       let sort = ['SCORE_DESC']; // Tri par défaut
 
@@ -325,7 +325,7 @@ async function fillCarousels() {
         item.popularity >= 500
       );
 
-      // ✅ Filtrage renforcé pour les classiques
+      // Filtrage renforcé pour les classiques
       if (c.id === 'carousel-classiques') {
         items = items.filter(item => item.popularity >= 5000);
       }
@@ -416,7 +416,7 @@ async function fetchSeasonBanner() {
 /* =============================================================== */
 
 /**
-- ✅ CORRECTION : Gestion complète du menu burger mobile.
+- - CORRECTION : Gestion complète du menu burger mobile.
 - - Toggle du menu au clic sur le bouton
 - - Fermeture au clic sur l'overlay
 - - Fermeture au clic sur un lien
@@ -434,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
   
-  // ✅ Toggle du menu au clic sur le burger
+  // Toggle du menu au clic sur le burger
   burgerBtn.addEventListener('click', () => {
     burgerBtn.classList.toggle('burger-open');
     mobileMenu.classList.toggle('open');
@@ -442,7 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.toggle('no-scroll');
   });
   
-  // ✅ Fermeture du menu au clic sur l'overlay (zone sombre)
+  // Fermeture du menu au clic sur l'overlay (zone sombre)
   overlay.addEventListener("click", () => {
     burgerBtn.classList.remove("burger-open");
     mobileMenu.classList.remove("open");
@@ -450,7 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove('no-scroll');
   });
   
-  // ✅ Fermeture du menu au clic sur un lien de navigation
+  // Fermeture du menu au clic sur un lien de navigation
   document.querySelectorAll('.mobile-link').forEach(link => {
     link.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
@@ -467,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
 /* =============================================================== */
 
 /**
-- ✅ AJOUT : Gestion complète de la barre de recherche.
+- - AJOUT : Gestion complète de la barre de recherche.
 - - Affichage des résultats au focus et à la saisie
 - - Masquage des résultats au clic en dehors
 - - À COMPLÉTER : Logique de recherche réelle dans les APIs
