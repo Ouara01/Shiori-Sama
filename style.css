@@ -413,138 +413,16 @@ font-family: 'Quicksand', sans-serif;
 }
 
 /* ======================================================== */
-/*                   RESPONSIVE - MOBILE                    */
+/* RESPONSIVE - MOBILE                     */
 /* ======================================================== */
 
 @media (max-width: 768px) {
 
+    /* --- GLOBAL & LAYOUT --- */
+    
     /* Masquage du menu desktop */
     .nav-links {
         display: none;
-    }
-
-    /* Header plus compact */
-    .shiori-header {
-        display: flex;
-        padding: 0.3rem 0.3rem;
-        margin-bottom: 0.6rem;
-    }
-    
-    .titre-accueil {
-        display: flex;
-        align-items: flex-end;
-        text-align: center;
-        font-size: 1.1rem;
-        padding: 4px 4px;
-        padding-left: 4px;
-    }
-
-    .titre-accueil:checked {
-        color: #C3423F;
-        transition: all 1.5s;
-    }
-
-    /* Barre de recherche centrée et plus large */
-    .shiori-mobile-search {
-        flex: 1;
-        display: flex;
-        position: relative;
-        justify-content: flex-start;
-        align-items: center;
-        margin: 0 8px;
-    }
-
-    .shiori-mobile-search input {
-        background: #111;
-        border: 1px solid #333;
-        border-radius: 8px;
-        padding: 0.5em 1em 0.5em 32px; 
-        width: 75px;
-        color: white;
-        transition: all 0.2s;
-        font-family: 'Quicksand', sans-serif;
-        font-weight: 600;
-    }
-
-    /* Conteneur des résultats de recherche (affiché/masqué via JS) */
-    #shiori-result-mobile {
-        position: absolute;
-        top: 60px;
-        left: 0;
-        background-color: #111;
-        border: 1px solid #333;
-        border-radius: 8px;
-        width: 100%;
-        max-height: 100px;
-        overflow-y: auto;
-        z-index: 1000;
-        display: none;
-        padding: 10px 15px;
-        box-sizing: border-box;
-    }
-
-    .search-icon-mobile {
-        position: absolute;
-        left: 12px;
-        width: 20px;
-        height: 20px;
-        object-fit: contain;
-        vertical-align: top;
-        padding-right: 8px;
-        padding-left: 8px;
-    }
-
-    /* Bannière saison en colonne (images au-dessus, texte en dessous) */
-    .season-banner {
-        width: 100%;
-        height: 20%;
-        border-radius: 8px;
-        min-height: 360px;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        box-shadow: none;
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-
-    #season-banner-images {
-        width: 100%;
-        height: 60%;
-        padding: 0 12px;
-        gap: 8px;
-        justify-content: center;
-    }
-
-    .season-banner-images img {
-        width: 22%;
-        height: 60%;
-        border-radius: 6px;
-        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
-    }
-
-    .season-banner-text {
-        display: flex;
-        flex-direction: column;
-        padding: 1rem 1rem 1.6rem 1rem;
-        text-align: center;
-    }
-
-    .season-banner-text h2 {
-        font-size: 1.8rem;
-    }
-
-    .season-banner-text p {
-        font-size: 0.95rem;
-    }
-
-    /* Footer mobile ajusté */
-    .shiori-footer {
-        display: flex;
-        text-align: center;
-        padding: 1.3rem 0;
-        margin-top: 6rem;
-        font-size: 12px;
     }
 
     main {
@@ -552,121 +430,228 @@ font-family: 'Quicksand', sans-serif;
         margin-right: 5%;
     }
 
-    /* Header plus compact */
+    /* Empêcher le scroll du body quand le menu est ouvert */
+    body.no-scroll {
+        overflow: hidden;
+    }
+
+    /* --- HEADER (Optimisé) --- */
+    
     .shiori-header {
         display: flex;
-        flex-direction: row;
+        align-items: center; /* Aligne tout verticalement au centre */
+        justify-content: space-between; /* Répartit l'espace */
+        padding: 0.4rem 5%; /* 5% pour s'aligner exactement avec le body */
+        margin-bottom: 0.6rem;
+        position: relative;
+    }
+
+    /* 1. Bouton Burger (Tout à gauche) */
+    .burger-menu-btn {
+        order: 1; /* Force la position en premier */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 28px;
+        height: 20px;
+        cursor: pointer;
+        padding: 0;
+        margin-right: 15px; /* Espacement avec la barre de recherche */
+        z-index: 1100; /* Au-dessus du menu déroulant */
+    }
+
+    /* 2. Barre de recherche (Juste à côté du burger) */
+    .shiori-mobile-search {
+        order: 2; /* Position en deuxième */
+        flex: 1; /* Prend tout l'espace disponible pour pousser le titre à droite */
+        display: flex;
+        position: relative;
+        justify-content: flex-start; /* Input collé à gauche (vers le burger) */
         align-items: center;
-        padding: 0.3rem 3%;
     }
 
-    /* Cards adaptées à la faible hauteur */
-    .shiori-card {
-        width: 175px;
-        height: 275px;
+    .shiori-mobile-search input {
+        background: #111;
+        border: 1px solid #333;
+        border-radius: 8px;
+        padding: 0.5em 1em 0.5em 32px; 
+        width: 75px; /* Largeur fixe petite pour rester compact */
+        color: white;
+        transition: all 0.2s;
+        font-family: 'Quicksand', sans-serif;
+        font-weight: 600;
     }
 
-    .shiori-card img {
-        height: 55%;
+    .shiori-mobile-search input:focus {
+        width: 100%; /* S'agrandit au focus si nécessaire */
+        border-color: #C3423F;
+        outline: none;
     }
 
-    .card-title {
-        font-size: 12px;
+    .search-icon-mobile {
+        position: absolute;
+        left: 8px;
+        width: 16px;
+        height: 16px;
+        object-fit: contain;
+        pointer-events: none;
     }
 
-    .card-info span {
-        font-size: 10px;
+    /* Résultats de recherche */
+    #shiori-result-mobile {
+        position: absolute;
+        top: 45px;
+        left: 0;
+        background-color: #111;
+        border: 1px solid #333;
+        border-radius: 8px;
+        width: 100%; /* S'adapte à la largeur de la div parent */
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        padding: 10px;
     }
 
+    /* 3. Titre (Tout à droite) */
+    .titre-accueil {
+        order: 3; /* Position en dernier */
+        display: block;
+        font-size: 1.1rem;
+        padding: 0;
+        text-align: right;
+        white-space: nowrap; /* Empêche le titre de passer à la ligne */
+    }
+
+    .titre-accueil:checked {
+        color: #C3423F;
+        transition: all 1.5s;
+    }
+
+    /* --- BANNIÈRE SAISON --- */
+
+    .season-banner {
+        width: 100%; /* Prend la largeur du conteneur (qui a déjà les marges 5%) */
+        height: auto;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        box-shadow: none;
+        margin: 0; /* Marges gérées par le main */
+        margin-bottom: 2rem;
+    }
+
+    #season-banner-images {
+        width: 100%;
+        padding: 10px 0;
+        gap: 8px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .season-banner-images img {
+        width: 22%;
+        aspect-ratio: 2/3; /* Maintient le ratio image */
+        border-radius: 6px;
+        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+        object-fit: cover;
+    }
+
+    .season-banner-text {
+        padding: 0.5rem 1rem 1.5rem 1rem;
+        text-align: center;
+    }
+
+    .season-banner-text h2 {
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .season-banner-text p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* --- CARDS & CAROUSEL --- */
+    
     .carousel-anime {
         gap: 10px;
         margin: 1rem 0;
     }
 
-    .shiori-footer {
-        margin-top: 4rem;
+    .shiori-card {
+        width: 160px; /* Légèrement réduit pour mieux fitter sur petits écrans */
+        height: 260px;
+    }
+
+    .shiori-card img {
+        height: 60%;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .card-info span {
         font-size: 11px;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
     }
 
-    /* ================================================================ */
-    /* =================  MENU BURGER (MOBILE UNIQUEMENT) ============= */
-    /* ================================================================ */
-
-    /* Bouton burger */
-    .burger-menu-btn {
-        display: flex;
-        align-self: flex-start;
-        width: 28px;
-        height: 20px;
-        flex-direction: column;
-        justify-content: space-between;
-        cursor: pointer;
-        padding: 4px;
-    }
+    /* --- MENU BURGER (ANIMATION & CONTENU) --- */
 
     .burger-open span.active {
-        color: #C3423F;
-        transform: translateY(-1px);
-        transition: all 0.3s;
+        background-color: #C3423F;
     }
     
     /* Animation en croix */
-    .burger-open span:nth-child(1) {
-        transform: translateY(9px) rotate(45deg);
-    }
-    .burger-open span:nth-child(2) {
-        opacity: 0;
-    }
-    .burger-open span:nth-child(3) {
-        transform: translateY(-9px) rotate(-45deg);
-    }
+    .burger-open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
+    .burger-open span:nth-child(2) { opacity: 0; }
+    .burger-open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
     
-    /* MENU SLIDE TOP DÉROULANT */
+    /* Overlay Menu */
     .mobile-menu {
         position: fixed;
-        top: 60px; /* caché */
+        top: 60px; /* Ajuster selon la hauteur réelle de ton header si besoin */
         left: 0;
         width: 100%;
-        height: 100vh;
-        background: rgba(10, 10, 10, 0.55);
-        backdrop-filter: blur(8px);
-        border-bottom: 1px solid rgba(255,255,255,0.06);
-        transition: top 0.45s cubic-bezier(.2,.9,.2,1), opacity 0.35s ease;
+        height: calc(100vh - 60px);
+        background: rgba(10, 10, 10, 0.95); /* Plus opaque pour lisibilité */
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(255,255,255,0.06);
+        transition: opacity 0.3s ease, visibility 0.3s;
         opacity: 0;
-        z-index: 1000;
+        visibility: hidden; /* Meilleure performance que display none pour l'anim */
+        z-index: 999;
     }
 
     .mobile-menu.open {
-        top: 60px; /* DESCEND JUSTE SOUS LE HEADER */
         opacity: 1;
+        visibility: visible;
     }
     
-    /* Contenu du menu */
     .mobile-menu-content {
-        padding: 0.5rem 1rem;
+        padding: 1rem 1.5rem;
     }
     
     .mobile-menu-header {
-        margin-bottom: 0.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.5);
-        padding: 0.8rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        padding-bottom: 0.8rem;
     }
     
-    /* Titre du menu */
     .mobile-menu-title {
-        display: flex;
-        justify-content: flex-start;
-        text-align: center;
         font-size: 1.4rem;
         font-weight: 700;
         font-family: 'Electroharmonix', 'Quicksand', sans-serif;
+        color: #fff;
     }
 
     .nav-mobile-menu {
         display: flex;
         flex-direction: column;
+        gap: 15px; /* Espace entre les liens */
         margin-top: 1rem;
     }
 
@@ -674,36 +659,35 @@ font-family: 'Quicksand', sans-serif;
         width: 24px;
         height: 24px;
         object-fit: contain;
-        vertical-align: top;
-        padding-right: 8px;
-        display: flex;
-        align-items: flex-end;
-        justify-content: flex-end;
-        
+        margin-right: 10px;
     }
     
-    /* Liens */
     .mobile-link {
         display: flex;
+        align-items: center; /* Aligne icone et texte */
         justify-content: flex-start;
-        text-align: center;
         font-size: 1.1rem;
-        padding: 0.8rem 0;
+        padding: 0.5rem 0;
         color: white;
-        font-weight: 700;
-        transition: 0.2s;
+        font-weight: 600;
+        text-decoration: none;
     }
 
-    .mobile-link.active {
+    .mobile-link.active, .mobile-link:hover {
         color: #C3423F;
-        transition: all 0.3s;
     }
 
-    /* Empêcher le scroll du body quand le menu est ouvert */
-    body.no-scroll {
-        overflow: hidden;
+    /* --- FOOTER --- */
+    
+    .shiori-footer {
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 4rem;
+        font-size: 11px;
+        color: #888;
     }
-
 }
 
 /* =============================================================== */
