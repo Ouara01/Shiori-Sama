@@ -413,14 +413,13 @@ font-family: 'Quicksand', sans-serif;
 }
 
 /* ======================================================== */
-/* RESPONSIVE - MOBILE                     */
+/* RESPONSIVE - MOBILE                                      */
 /* ======================================================== */
 
 @media (max-width: 768px) {
 
     /* --- GLOBAL & LAYOUT --- */
     
-    /* Masquage du menu desktop */
     .nav-links {
         display: none;
     }
@@ -430,25 +429,26 @@ font-family: 'Quicksand', sans-serif;
         margin-right: 5%;
     }
 
-    /* Empêcher le scroll du body quand le menu est ouvert */
     body.no-scroll {
         overflow: hidden;
     }
 
-    /* --- HEADER (Optimisé) --- */
+    /* --- HEADER (Correction Alignement & Visibilité) --- */
     
     .shiori-header {
         display: flex;
-        align-items: center; /* Aligne tout verticalement au centre */
-        justify-content: space-between; /* Répartit l'espace */
-        padding: 0.4rem 5%; /* 5% pour s'aligner exactement avec le body */
+        flex-direction: row;
+        align-items: center; /* Centre verticalement tous les éléments */
+        justify-content: space-between;
+        padding: 0.5rem 5%; /* Alignement avec le body */
         margin-bottom: 0.6rem;
         position: relative;
+        height: 50px; /* Fixe une hauteur pour garantir le centrage parfait */
     }
 
     /* 1. Bouton Burger (Tout à gauche) */
     .burger-menu-btn {
-        order: 1; /* Force la position en premier */
+        order: 1;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -456,18 +456,30 @@ font-family: 'Quicksand', sans-serif;
         height: 20px;
         cursor: pointer;
         padding: 0;
-        margin-right: 15px; /* Espacement avec la barre de recherche */
-        z-index: 1100; /* Au-dessus du menu déroulant */
+        margin-right: 15px;
+        z-index: 1100;
+        background: transparent; /* S'assure qu'il n'y a pas de fond gris */
+        border: none;
     }
 
-    /* 2. Barre de recherche (Juste à côté du burger) */
+    /* IMPORTANT : Styles des lignes du burger pour qu'elles soient visibles */
+    .burger-menu-btn span {
+        display: block;
+        width: 100%;
+        height: 2px; /* Épaisseur de la ligne */
+        background-color: #ffffff; /* Couleur blanche */
+        border-radius: 2px;
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* 2. Barre de recherche (Milieu - collé au burger) */
     .shiori-mobile-search {
-        order: 2; /* Position en deuxième */
-        flex: 1; /* Prend tout l'espace disponible pour pousser le titre à droite */
+        order: 2;
+        flex: 1; /* Prend l'espace restant */
         display: flex;
+        align-items: center; /* Centre l'input verticalement dans sa div */
         position: relative;
-        justify-content: flex-start; /* Input collé à gauche (vers le burger) */
-        align-items: center;
+        height: 100%; /* Prend toute la hauteur du header */
     }
 
     .shiori-mobile-search input {
@@ -475,15 +487,18 @@ font-family: 'Quicksand', sans-serif;
         border: 1px solid #333;
         border-radius: 8px;
         padding: 0.5em 1em 0.5em 32px; 
-        width: 75px; /* Largeur fixe petite pour rester compact */
+        width: 75px; 
         color: white;
         transition: all 0.2s;
         font-family: 'Quicksand', sans-serif;
         font-weight: 600;
+        /* Correction hauteur input */
+        height: 36px;
+        box-sizing: border-box;
     }
 
     .shiori-mobile-search input:focus {
-        width: 100%; /* S'agrandit au focus si nécessaire */
+        width: 100%;
         border-color: #C3423F;
         outline: none;
     }
@@ -491,13 +506,14 @@ font-family: 'Quicksand', sans-serif;
     .search-icon-mobile {
         position: absolute;
         left: 8px;
+        top: 50%;
+        transform: translateY(-50%); /* Centrage parfait de l'icône */
         width: 16px;
         height: 16px;
         object-fit: contain;
         pointer-events: none;
     }
 
-    /* Résultats de recherche */
     #shiori-result-mobile {
         position: absolute;
         top: 45px;
@@ -505,7 +521,7 @@ font-family: 'Quicksand', sans-serif;
         background-color: #111;
         border: 1px solid #333;
         border-radius: 8px;
-        width: 100%; /* S'adapte à la largeur de la div parent */
+        width: 100%;
         max-height: 200px;
         overflow-y: auto;
         z-index: 1000;
@@ -515,12 +531,14 @@ font-family: 'Quicksand', sans-serif;
 
     /* 3. Titre (Tout à droite) */
     .titre-accueil {
-        order: 3; /* Position en dernier */
-        display: block;
+        order: 3;
+        display: flex;
+        align-items: center; /* Centre le texte verticalement */
+        height: 100%;
         font-size: 1.1rem;
         padding: 0;
         text-align: right;
-        white-space: nowrap; /* Empêche le titre de passer à la ligne */
+        white-space: nowrap;
     }
 
     .titre-accueil:checked {
@@ -528,101 +546,30 @@ font-family: 'Quicksand', sans-serif;
         transition: all 1.5s;
     }
 
-    /* --- BANNIÈRE SAISON --- */
-
-    .season-banner {
-        width: 100%; /* Prend la largeur du conteneur (qui a déjà les marges 5%) */
-        height: auto;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        box-shadow: none;
-        margin: 0; /* Marges gérées par le main */
-        margin-bottom: 2rem;
-    }
-
-    #season-banner-images {
-        width: 100%;
-        padding: 10px 0;
-        gap: 8px;
-        display: flex;
-        justify-content: center;
-    }
-
-    .season-banner-images img {
-        width: 22%;
-        aspect-ratio: 2/3; /* Maintient le ratio image */
-        border-radius: 6px;
-        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
-        object-fit: cover;
-    }
-
-    .season-banner-text {
-        padding: 0.5rem 1rem 1.5rem 1rem;
-        text-align: center;
-    }
-
-    .season-banner-text h2 {
-        font-size: 1.6rem;
-        margin-bottom: 0.5rem;
-    }
-
-    .season-banner-text p {
-        font-size: 0.9rem;
-        line-height: 1.4;
-    }
-
-    /* --- CARDS & CAROUSEL --- */
-    
-    .carousel-anime {
-        gap: 10px;
-        margin: 1rem 0;
-    }
-
-    .shiori-card {
-        width: 160px; /* Légèrement réduit pour mieux fitter sur petits écrans */
-        height: 260px;
-    }
-
-    .shiori-card img {
-        height: 60%;
-        object-fit: cover;
-    }
-
-    .card-title {
-        font-size: 13px;
-        margin-top: 5px;
-    }
-
-    .card-info span {
-        font-size: 11px;
-    }
-
-    /* --- MENU BURGER (ANIMATION & CONTENU) --- */
+    /* --- ANIMATION BURGER --- */
 
     .burger-open span.active {
         background-color: #C3423F;
     }
     
-    /* Animation en croix */
     .burger-open span:nth-child(1) { transform: translateY(9px) rotate(45deg); }
     .burger-open span:nth-child(2) { opacity: 0; }
     .burger-open span:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
+
+    /* --- MENU DÉROULANT --- */
     
-    /* Overlay Menu */
     .mobile-menu {
         position: fixed;
-        top: 60px; /* Ajuster selon la hauteur réelle de ton header si besoin */
+        top: 60px; /* Ajuster si le header est plus petit/grand */
         left: 0;
         width: 100%;
         height: calc(100vh - 60px);
-        background: rgba(10, 10, 10, 0.95); /* Plus opaque pour lisibilité */
+        background: rgba(10, 10, 10, 0.98);
         backdrop-filter: blur(10px);
         border-top: 1px solid rgba(255,255,255,0.06);
         transition: opacity 0.3s ease, visibility 0.3s;
         opacity: 0;
-        visibility: hidden; /* Meilleure performance que display none pour l'anim */
+        visibility: hidden;
         z-index: 999;
     }
 
@@ -651,7 +598,7 @@ font-family: 'Quicksand', sans-serif;
     .nav-mobile-menu {
         display: flex;
         flex-direction: column;
-        gap: 15px; /* Espace entre les liens */
+        gap: 15px;
         margin-top: 1rem;
     }
 
@@ -664,7 +611,7 @@ font-family: 'Quicksand', sans-serif;
     
     .mobile-link {
         display: flex;
-        align-items: center; /* Aligne icone et texte */
+        align-items: center;
         justify-content: flex-start;
         font-size: 1.1rem;
         padding: 0.5rem 0;
@@ -677,8 +624,77 @@ font-family: 'Quicksand', sans-serif;
         color: #C3423F;
     }
 
-    /* --- FOOTER --- */
+    /* --- BANNIÈRE SAISON --- */
+
+    .season-banner {
+        width: 100%;
+        height: auto;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        padding: 0;
+        box-shadow: none;
+        margin: 0;
+        margin-bottom: 2rem;
+    }
+
+    #season-banner-images {
+        width: 100%;
+        padding: 10px 0;
+        gap: 8px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .season-banner-images img {
+        width: 22%;
+        aspect-ratio: 2/3;
+        border-radius: 6px;
+        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+        object-fit: cover;
+    }
+
+    .season-banner-text {
+        padding: 0.5rem 1rem 1.5rem 1rem;
+        text-align: center;
+    }
+
+    .season-banner-text h2 {
+        font-size: 1.6rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .season-banner-text p {
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+
+    /* --- CARDS & FOOTER --- */
     
+    .carousel-anime {
+        gap: 10px;
+        margin: 1rem 0;
+    }
+
+    .shiori-card {
+        width: 160px;
+        height: 260px;
+    }
+
+    .shiori-card img {
+        height: 60%;
+        object-fit: cover;
+    }
+
+    .card-title {
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .card-info span {
+        font-size: 11px;
+    }
+
     .shiori-footer {
         display: flex;
         justify-content: center;
