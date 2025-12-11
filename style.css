@@ -425,8 +425,6 @@ font-family: 'Quicksand', sans-serif;
 
     /* Header plus compact */
     .shiori-header {
-        display: flex;
-        flex-direction: row;
         padding: 0.3rem 0.3rem;
         margin-bottom: 0.6rem;
     }
@@ -442,7 +440,7 @@ font-family: 'Quicksand', sans-serif;
 
     .titre-accueil:checked {
         color: #C3423F;
-        transition: all 0.3s;
+        transition: all 1s;
     }
 
     /* Barre de recherche centrée et plus large */
