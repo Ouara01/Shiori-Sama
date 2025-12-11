@@ -646,9 +646,16 @@ font-family: 'Quicksand', sans-serif;
 
     /* Header plus compact */
     .shiori-header {
-        padding: 0.5rem 4%;
+        padding: 0.4rem 4%;
         margin-bottom: 0.6rem;
         align-items: center;
+    }
+    
+    .titre-accueil {
+        display: flex;
+        text-align: center left;
+        font-size: 12px;
+        padding: 4px 4px;
     }
 
     /* Barre de recherche centrée et plus large */
@@ -674,7 +681,7 @@ font-family: 'Quicksand', sans-serif;
 
     /* Bannière saison en colonne (images au-dessus, texte en dessous) */
     .season-banner {
-        width: 100%;
+        width: 90%;
         border-radius: 8px;
         min-height: 360px;
         display: flex;
@@ -698,6 +705,8 @@ font-family: 'Quicksand', sans-serif;
     }
 
     .season-banner-text {
+        display: flex;
+        flex-direction: column;
         width: 100%;
         padding: 1rem 1rem 1.6rem 1rem;
         text-align: center;
@@ -775,7 +784,7 @@ font-family: 'Quicksand', sans-serif;
 /* Bannière saison ultra compacte */
 .season-banner {
     flex-direction: row;
-    width: 96%;
+    width: 90%;
     padding: 0.6rem;
     min-height: 160px;
 }
@@ -868,7 +877,8 @@ font-family: 'Quicksand', sans-serif;
     }
     
     .mobile-menu-title {
-        position: center;
+        display: flex;
+        text align: center;
         font-size: 1.4rem;
         font-weight: 700;
         font-family: 'Electroharmonix', 'Quicksand', sans-serif;
@@ -876,8 +886,9 @@ font-family: 'Quicksand', sans-serif;
     
     /* Liens */
     .mobile-link {
-        position: right;
-        display: block;
+        display: flex;
+        text-align: center right;
+        justify-content: space-between;
         font-size: 1.1rem;
         padding: 0.8rem 0;
         color: white;
