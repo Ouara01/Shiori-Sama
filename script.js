@@ -425,7 +425,7 @@ async function fetchSeasonBanner() {
 document.addEventListener("DOMContentLoaded", () => {
   
   const burgerBtn = document.getElementById('burgerBtn');
-  const mobileMenu = document.querySelector('.mobile-menu–top');
+  const mobileMenu = document.querySelector('.mobile-menu-top');
   const overlay = document.querySelector('.menu-overlay');
   
   // Vérification de l'existence des éléments (prévention d'erreurs)
