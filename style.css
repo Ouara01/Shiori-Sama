@@ -435,14 +435,21 @@ font-family: 'Quicksand', sans-serif;
         display: flex;
         align-items: flex-start;
         text-align: center;
-        font-size: 1rem;
+        font-size: 1.1rem;
         padding: 4px 4px;
+        padding-left: 4px;
+    }
+
+    .titre-accueil:checked {
+        color: #C3423F;
+        transition: all 0.3s;
     }
 
     /* Barre de recherche centrée et plus large */
     .shiori-mobile-search {
         flex: 1;
         display: flex;
+        position: relative;
         justify-content: flex-end;
         align-items: center;
         margin: 0 8px;
@@ -479,6 +486,7 @@ font-family: 'Quicksand', sans-serif;
 
     .search-icon-mobile {
         position: absolute;
+        left: 10px;
         width: 20px;
         height: 20px;
         object-fit: contain;
@@ -490,7 +498,7 @@ font-family: 'Quicksand', sans-serif;
     /* Bannière saison en colonne (images au-dessus, texte en dessous) */
     .season-banner {
         width: 100%;
-        height: auto;
+        height: 30%;
         border-radius: 8px;
         min-height: 360px;
         display: flex;
@@ -573,29 +581,6 @@ font-family: 'Quicksand', sans-serif;
         margin: 1rem 0;
     }
 
-    /* Bannière saison ultra compacte */
-    .season-banner {
-        flex-direction: row;
-        width: 100%;
-        padding: 0.6rem;
-        min-height: 160px;
-        margin-left: 5%;
-        margin-right: 5%;
-    }
-
-    #season-banner-images img {
-        width: 95px;
-        height: 135px;
-    }
-
-    .season-banner-text h2 {
-        font-size: 1.2rem;
-    }
-
-    .season-banner-text p {
-        font-size: 0.8rem;
-    }
-
     .shiori-footer {
         margin-top: 4rem;
         font-size: 11px;
@@ -615,11 +600,10 @@ font-family: 'Quicksand', sans-serif;
         flex-direction: column;
         justify-content: space-between;
         cursor: pointer;
-        z-index: 1002;
         padding: 4px;
     }
 
-    .burger-menu-btn.active {
+    .burger-menu-btn span.active {
         color: #C3423F;
         transform: translateY(-1px);
         transition: all 0.3s;
@@ -672,14 +656,14 @@ font-family: 'Quicksand', sans-serif;
     
     .mobile-menu-header {
         margin-bottom: 0.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.2);
+        border-bottom: 1px solid rgba(255,255,255,0.5);
         padding: 0.8rem;
     }
     
     /* Titre du menu */
     .mobile-menu-title {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
         text-align: center;
         font-size: 1.4rem;
         font-weight: 700;
@@ -693,8 +677,8 @@ font-family: 'Quicksand', sans-serif;
     }
 
     .nav-mobile-icon {
-        width: 20px;
-        height: 20px;
+        width: 24px;
+        height: 24px;
         object-fit: contain;
         vertical-align: top;
         padding-right: 8px;
@@ -712,8 +696,7 @@ font-family: 'Quicksand', sans-serif;
         font-size: 1.1rem;
         padding: 0.8rem 0;
         color: white;
-        font-weight: 600;
-        border-bottom: 1px solid rgba(255,255,255,0.07);
+        font-weight: 700;
         transition: 0.2s;
     }
 
