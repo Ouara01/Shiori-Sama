@@ -107,6 +107,98 @@ color:#C3423F;
 transition: all 0.3s;
 }
 
+/* ===============================================================
+   SPA - Styles additionnels pour les pages dynamiques (isolés)
+   - Collez ces règles à la fin de style.css
+   - N'utilisent pas de noms génériques qui pourraient casser ton style
+   =============================================================== */
+
+.spa-page-wrapper {
+  width: 100%;
+  margin: 1rem 0 3rem 0;
+}
+
+/* Filters area on catalogue */
+.spa-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.spa-filters label {
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.spa-filters select, .spa-filters input {
+  background: #111;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 6px 8px;
+}
+
+/* Profile panel */
+.spa-profile {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.spa-profile-left {
+  min-width: 260px;
+  background: rgba(255,255,255,0.02);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+.spa-profile-right {
+  flex: 1;
+}
+.spa-avatar img {
+  border-radius: 8px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}
+
+/* Detail page */
+.spa-detail {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+.spa-detail-left {
+  width: 300px;
+  min-width: 220px;
+}
+.spa-detail-right {
+  flex: 1;
+}
+.spa-detail img {
+  width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+.spa-detail-actions {
+  margin-top: 10px;
+}
+.spa-detail-actions button {
+  background: #C3423F;
+  color: white;
+  border: none;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Planning day block */
+.spa-planning-day {
+  margin-bottom: 1.2rem;
+}
+.spa-planning-day h3 {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+}
+
 /* =============================================================== */
 /*                      ICÔNES                                     */
 /* =============================================================== */
