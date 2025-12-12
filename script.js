@@ -505,6 +505,1088 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+/* ===============================================================
+   SHIORI-SAMA - SPA MAIN SCRIPT
+   - Remplace entièrement l'ancien script.js par celui-ci.
+   - Tout est commenté pour l'apprentissage.
+   - Architecture :
+     * Router hash-based
+     * Renderers : home, catalogue, planning, profil, detail
+     * localStorage : profile, lastWatched, favorites, history
+     * Integration optionally with backend at /api/releases
+   =============================================================== */
+
+/* ==========================
+   CONFIG / CONST
+   ========================== */
+
+// Optional backend base URL. Si tu déploies un backend (FastAPI) mets l'URL ici.
+// Exemple: const BACKEND_API_BASE = "https://mon-backend.example.com";
+const BACKEND_API_BASE = ""; // vide => pas de backend (on utilise AniList/Jikan côté client)
+
+// localStorage keys (centralisé pour éviter erreurs)
+const LS_KEYS = {
+  PROFILE: "shiori_profile",
+  LAST_WATCHED: "shiori_lastWatched", // array, ordre récent -> front
+  FAVORITES: "shiori_favorites",
+  HISTORY: "shiori_history"
+};
+
+// Timeout pour refresh local (ms) — utilisé côté front pour éviter fetchs répétés
+const CLIENT_CACHE_TTL = 1000 * 60 * 5; // 5 minutes
+
+// Petit cache in-memory pour la session (évite requests redondants)
+const sessionCache = {};
+
+/* ==========================
+   UTILITAIRES STORAGE
+   ========================== */
+
+function lsGet(key, fallback = null) {
+  try {
+    const v = localStorage.getItem(key);
+    return v ? JSON.parse(v) : fallback;
+  } catch (e) {
+    console.warn("lsGet parse error", e);
+    return fallback;
+  }
+}
+
+function lsSet(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch (e) {
+    console.warn("lsSet error", e);
+  }
+}
+
+// get or init list
+function lsGetOrInit(key) {
+  const val = lsGet(key);
+  if (!val) {
+    lsSet(key, []);
+    return [];
+  }
+  return val;
+}
+
+/* ==========================
+   ROUTER (hash-based)
+   ========================== */
+
+// route parsing: #/catalogue, #/anime/123, #/profil
+function getRoute() {
+  const hash = location.hash || "#/";
+  // normalize
+  const clean = hash.replace(/^#/, "");
+  return clean;
+}
+
+function navigateTo(hash) {
+  if (!hash.startsWith("#")) hash = "#" + hash;
+  location.hash = hash;
+  // scroll to top of main
+  window.scrollTo(0, 0);
+}
+
+/* ==========================
+   SMALL UI HELPERS
+   ========================== */
+
+function clearMain() {
+  // On injecte dans le <main> existant ; on nettoie son contenu à chaque route
+  const main = document.querySelector("main");
+  if (!main) return;
+  // keep header/footer intact
+  // Nous vidons tout le contenu du main (ce que l'HTML d'origine fait déjà).
+  main.innerHTML = "";
+  return main;
+}
+
+function createContainer(title = "") {
+  const wrapper = document.createElement("div");
+  wrapper.className = "spa-page-wrapper";
+  if (title) {
+    const h = document.createElement("h2");
+    h.textContent = title;
+    wrapper.appendChild(h);
+  }
+  return wrapper;
+}
+
+/* ==========================
+   CARD CREATION (réutilise .shiori-card)
+   ========================== */
+
+/**
+ * createCard - génère une card DOM réutilisable
+ * item: {
+ *   id, type('ANIME'|'MANGA'), title, image_url, averageScore, popularity,
+ *   seasonEpisode, languageTag (FR|VOSTFR|EN|JP), source: 'ANILIST'|'BACKEND'
+ * }
+ */
+function createCard(item) {
+  const card = document.createElement("div");
+  card.className = "shiori-card";
+  // stock metadata pour click
+  card.dataset.item = JSON.stringify(item);
+
+  // image (fallback)
+  const imgSrc = item.image_url || "src/assets/icons/cards.svg";
+
+  card.innerHTML = `
+    <img src="${imgSrc}" alt="${escapeHtml(item.title)}" loading="lazy">
+    <div class="card-title">${escapeHtml(item.title)}</div>
+    <div class="card-type">${item.type || "ANIME"}</div>
+    <div class="card-language"><span class="${getFlagClass(item.languageTag || 'EN')}"></span></div>
+    <div class="card-info">
+      <span>${item.seasonEpisode || "N/A"}</span>
+    </div>
+  `;
+
+  // click handler : ouvre la page detail SPA et enregistre lastWatched
+  card.addEventListener("click", () => {
+    // enregistrement local : on sauvegarde l'objet minimal pour "reprenez"
+    addToLastWatched({
+      id: item.id || generateFauxId(item.title),
+      type: item.type || "ANIME",
+      title: item.title,
+      image_url: imgSrc,
+      progress: 0, // par défaut, peut être modifié dans la page détail si tu veux
+      language: item.languageTag || "EN",
+      timestamp: Date.now()
+    });
+    // navigation vers la page détail
+    const safeId = encodeURIComponent(item.id || generateFauxId(item.title));
+    navigateTo(`/detail/${safeId}`);
+    // on stocke la lastOpenedData pour que la page détail sache quoi afficher sans re-fetch
+    sessionCache["lastOpenedData"] = item;
+    routeHandler(); // render immediately
+  });
+
+  return card;
+}
+
+/* ==========================
+   CONTINUE / LAST WATCHED
+   ========================== */
+
+function addToLastWatched(entry) {
+  // entry minimal attendu : {id, type, title, image_url, progress, language, timestamp}
+  const list = lsGetOrInit(LS_KEYS.LAST_WATCHED);
+  // supprimer doublons sur id
+  const filtered = list.filter(it => it.id !== entry.id);
+  // push en tête
+  filtered.unshift(entry);
+  // limiter taille
+  const limited = filtered.slice(0, 20);
+  lsSet(LS_KEYS.LAST_WATCHED, limited);
+  // mettre à jour visuellement si on est sur la home
+  renderHome(); // safe: will re-render the parts needed
+}
+
+/* ==========================
+   PROFILE (localStorage)
+   ========================== */
+
+function getProfile() {
+  return lsGet(LS_KEYS.PROFILE, {
+    username: "",
+    avatar: "", // URL ou base64 si tu veux
+    theme: "dark"
+  });
+}
+
+function setProfile(profile) {
+  lsSet(LS_KEYS.PROFILE, profile);
+}
+
+/* ==========================
+   HELPERS DIVERS
+   ========================== */
+
+function escapeHtml(str) {
+  return (str + "").replace(/[&<>"']/g, s => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[s]);
+}
+
+function generateFauxId(title) {
+  // simple slug fallback
+  return title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+/* ==========================
+   FLAG CLASS MAPPING (réutilise ton getFlagClass)
+   ========================== */
+
+function getFlagClass(language) {
+  const map = {
+    "JAPANESE": "fi fi-jp",
+    "ENGLISH": "fi fi-us",
+    "FRENCH": "fi fi-fr",
+    "JP": "fi fi-jp",
+    "EN": "fi fi-us",
+    "FR": "fi fi-fr",
+    "VOSTFR": "fi fi-fr"
+  };
+  return map[(language || "").toUpperCase()] || "fi fi-xx";
+}
+
+/* ==========================
+   DATA FETCHING (AniList / Jikan / Optional Backend)
+   - On tente d'utiliser le backend si configuré (ex: /api/releases)
+   - Sinon on utilise AniList + Jikan (comme dans ton code existant)
+   - IMPORTANT : on ne tente jamais de scraper Nyaa depuis le front-end
+   ========================== */
+
+async function fetchFromBackendReleases(params = {}) {
+  if (!BACKEND_API_BASE) return null;
+  const url = BACKEND_API_BASE.replace(/\/$/, "") + "/api/releases";
+  try {
+    const res = await fetch(url);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data;
+  } catch (e) {
+    console.warn("Backend fetch failed", e);
+    return null;
+  }
+}
+
+// Réutilise ta fonction getAniListQuery si besoin (on garde simple ici)
+async function fetchAniListSimple(type = 'ANIME', sort = ['SCORE_DESC'], page = 1, perPage = 12) {
+  // On garde exactement la logique que tu avais : GraphQL vers AniList
+  const query = getAniListQuery(type);
+  try {
+    const resp = await fetch('https://graphql.anilist.co', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        query,
+        variables: { page, perPage, sort }
+      })
+    });
+    const json = await resp.json();
+    if (json.errors) {
+      console.warn("AniList errors", json.errors);
+      return [];
+    }
+    const mapped = json.data.Page.media.map(m => ({
+      id: m.id,
+      title: m.title.userPreferred,
+      image_url: m.coverImage.large || m.coverImage.medium,
+      startDate: m.startDate,
+      averageScore: m.averageScore || 0,
+      popularity: m.popularity || 0,
+      seasonEpisode: m.season && m.episodes ? `S${m.season}E${m.episodes}` : "",
+      type: m.type,
+      languageTag: m.staff?.edges?.[0]?.node?.language || "JP",
+      source: "ANILIST"
+    }));
+    return mapped;
+  } catch (e) {
+    console.error("fetchAniListSimple error", e);
+    return [];
+  }
+}
+
+/* ==========================
+   RENDERERS - Home / Catalogue / Planning / Profil / Detail
+   ========================== */
+
+async function renderHome() {
+  // Recréation du main mais en gardant header/footer (clearMain gère ça)
+  const main = clearMain();
+
+  // 1) on recrée la season-banner d'origine (on peut cloner HTML original or reuse existing)
+  const bannerHTML = `
+    <section class="season-banner-wrapper">
+      <section class="season-banner">
+        <div class="season-banner-images" id="season-banner-images"></div>
+        <div class="season-banner-text">
+          <h2>NOUVELLE SAISON</h2>
+          <p>Montez dans le train pour suivre les pépites du moment !</p>
+        </div>
+      </section>
+    </section>
+  `;
+  main.insertAdjacentHTML('beforeend', bannerHTML);
+
+  // container for "Reprenez votre visionnage"
+  const repriseSection = document.createElement("section");
+  repriseSection.className = "section-reprendre";
+  repriseSection.innerHTML = `
+    <div class="rep-visio">
+      <img class="h2-icons" src="src/assets/icons/clock.svg" alt="Icône horloge"/>
+      <h2 class="h2-visio">REPRENEZ VOTRE VISIONNAGE</h2>
+    </div>
+    <div class="carousel-anime" id="carousel-reprendre"></div>
+  `;
+  main.appendChild(repriseSection);
+
+  // container for "Sorties du jour"
+  const sortiesSection = document.createElement("section");
+  sortiesSection.className = "section-sorties-jour";
+  sortiesSection.innerHTML = `
+    <div class="sorties-jour">
+      <img class="h2-icons" src="src/assets/icons/arrow-left-04.svg" alt="Précédent"/>
+      <h2 class="h2-sorties" id="date-title"></h2>
+      <img class="h2-icons" src="src/assets/icons/arrow-right-04.svg" alt="Suivant"/>
+    </div>
+    <div class="carousel-anime" id="carousel-sorties-jour"></div>
+  `;
+  main.appendChild(sortiesSection);
+
+  // autres sections : derniers épisodes, scans, classiques (on réutilise tes ids)
+  const others = [
+    { id: "carousel-episodes", title: "DERNIERS ÉPISODES AJOUTÉS", icon: "directbox-receive" },
+    { id: "carousel-scans", title: "DERNIERS SCANS AJOUTÉS", icon: "directbox-receive" },
+    { id: "carousel-classiques", title: "LES CLASSIQUES", icon: "verify" }
+  ];
+  for (const o of others) {
+    const s = document.createElement("section");
+    s.className = o.id === "carousel-scans" ? "section-derniers-scans" : (o.id === "carousel-classiques" ? "section-classiques" : "section-derniers-episodes");
+    s.innerHTML = `
+      <div class="${o.id === "carousel-scans" ? "derniers-scans" : (o.id === "carousel-classiques" ? "les-classiques" : "derniers-episodes")}">
+        <img class="h2-icons" src="src/assets/icons/${o.icon}.svg" alt="Icône"/>
+        <h2 class="h2-episodes">${o.title}</h2>
+      </div>
+      <div class="carousel-anime" id="${o.id}"></div>
+    `;
+    main.appendChild(s);
+  }
+
+  // Render "lastWatched" from localStorage into #carousel-reprendre
+  const last = lsGet(LS_KEYS.LAST_WATCHED, []);
+  const carouselReprendre = document.getElementById("carousel-reprendre");
+  if (!last || last.length === 0) {
+    // hide section if empty
+    carouselReprendre.parentElement.style.display = "none";
+  } else {
+    carouselReprendre.parentElement.style.display = ""; // ensure visible
+    carouselReprendre.innerHTML = "";
+    last.forEach(entry => {
+      const item = {
+        id: entry.id,
+        title: entry.title,
+        image_url: entry.image_url,
+        type: entry.type,
+        seasonEpisode: "", // on ne stocke pas forcément l'EP
+        languageTag: entry.language
+      };
+      carouselReprendre.appendChild(createCard(item));
+    });
+  }
+
+  // Fill other carousels by fetching data (attempt backend first)
+  await fillCarouselsFromHome();
+
+  // Set date title (fonction réutilisée)
+  setDateTitle();
+}
+
+/**
+ * fillCarouselsFromHome - remplit les carousels sur la home
+ * - tente backend
+ * - sinon AniList/Jikan
+ */
+async function fillCarouselsFromHome() {
+  // Attempt backend call
+  let backendData = null;
+  if (BACKEND_API_BASE) {
+    backendData = await fetchFromBackendReleases();
+  }
+
+  // carousel-sorties-jour : prefer backend if present (which should include language info)
+  const sortiesContainer = document.getElementById("carousel-sorties-jour");
+  sortiesContainer.innerHTML = "";
+  if (backendData && Array.isArray(backendData) && backendData.length > 0) {
+    // backend should return items with upload_date, title, score, popularity, release_type (VOSTFR/VF/EN)
+    // Prioritisation: keep VOSTFR/VF first
+    const prioritized = backendData
+      .filter(i => i.title && (i.type === "ANIME" || i.type === "MANGA"))
+      .sort((a, b) => {
+        // priority on language
+        const scoreLang = langPriority(a.release_type) - langPriority(b.release_type);
+        if (scoreLang !== 0) return scoreLang;
+        // then by upload date desc
+        return new Date(b.upload_date) - new Date(a.upload_date);
+      });
+    for (const it of prioritized.slice(0, 50)) {
+      const mapped = {
+        id: it.id || generateFauxId(it.title),
+        title: it.title,
+        image_url: it.cover || it.image || "",
+        type: it.type || "ANIME",
+        seasonEpisode: it.episode ? `E${it.episode}` : "",
+        languageTag: it.release_type || "EN",
+        source: "BACKEND"
+      };
+      sortiesContainer.appendChild(createCard(mapped));
+    }
+  } else {
+    // fallback : use Jikan daily API (you already have function fetchJikanDaily in original script)
+    const jikanItems = await fetchJikanDaily();
+    sortiesContainer.innerHTML = "";
+    jikanItems.slice(0, 50).forEach(it => {
+      const mapped = {
+        id: generateFauxId(it.title),
+        title: it.title,
+        image_url: it.image_url,
+        type: it.type || "ANIME",
+        seasonEpisode: it.seasonEpisode,
+        languageTag: it.language || "JP",
+        source: "JIKAN"
+      };
+      sortiesContainer.appendChild(createCard(mapped));
+    });
+  }
+
+  // Fill other carousels using AniList (popularity/score)
+  const episodesContainer = document.getElementById("carousel-episodes");
+  const scansContainer = document.getElementById("carousel-scans");
+  const classiquesContainer = document.getElementById("carousel-classiques");
+
+  // episodes: popular
+  const episodes = await fetchAniListSimple('ANIME', ['POPULARITY_DESC'], 1, 24);
+  episodesContainer.innerHTML = "";
+  episodes.slice(0, 24).forEach(it => episodesContainer.appendChild(createCard(it)));
+
+  // scans: manga popularity
+  const mangas = await fetchAniListSimple('MANGA', ['POPULARITY_DESC'], 1, 24);
+  scansContainer.innerHTML = "";
+  mangas.slice(0, 24).forEach(it => scansContainer.appendChild(createCard(it)));
+
+  // classiques: score desc
+  const classiques = await fetchAniListSimple('ANIME', ['SCORE_DESC'], 1, 24);
+  classiquesContainer.innerHTML = "";
+  classiques.slice(0, 24).forEach(it => classiquesContainer.appendChild(createCard(it)));
+}
+
+/* language priority helper:
+   VOSTFR -> highest (returns negative to sort before), VF next, EN after, others last */
+function langPriority(tag) {
+  if (!tag) return 99;
+  const t = ("" + tag).toUpperCase();
+  if (t.includes("VOST") && t.includes("FR")) return -30;
+  if (t === "VOSTFR") return -30;
+  if (t.includes("VF") || t === "FRENCH" || t === "FR") return -20;
+  if (t === "EN" || t.includes("ENGLISH") || t.includes("SUB")) return 0;
+  return 50;
+}
+
+/* ==========================
+   RENDER: Catalogue (full)
+   ========================== */
+
+async function renderCatalogue() {
+  const main = clearMain();
+  const wrapper = createContainer("CATALOGUE");
+  // add filters UI
+  const filtersHTML = `
+    <div class="spa-filters">
+      <label>Type:
+        <select id="spa-filter-type">
+          <option value="ALL">TOUT</option>
+          <option value="ANIME">ANIME</option>
+          <option value="MANGA">MANGA</option>
+        </select>
+      </label>
+      <label>Langue:
+        <select id="spa-filter-lang">
+          <option value="ALL">TOUT</option>
+          <option value="VOSTFR">VOSTFR</option>
+          <option value="VF">VF</option>
+          <option value="EN">EN</option>
+        </select>
+      </label>
+      <label>Score min:
+        <select id="spa-filter-score">
+          <option value="0">0+</option>
+          <option value="7">7+</option>
+          <option value="8">8+</option>
+          <option value="9">9+</option>
+        </select>
+      </label>
+      <button id="spa-refresh-catalogue">Rafraîchir</button>
+    </div>
+    <div id="spa-catalogue-grid" class="carousel-anime"></div>
+  `;
+  wrapper.insertAdjacentHTML("beforeend", filtersHTML);
+  main.appendChild(wrapper);
+
+  // attach listeners
+  document.getElementById("spa-refresh-catalogue").addEventListener("click", async () => {
+    await loadCatalogueData();
+  });
+
+  // initial load
+  await loadCatalogueData();
+}
+
+async function loadCatalogueData() {
+  const grid = document.getElementById("spa-catalogue-grid");
+  grid.innerHTML = "";
+  // read filters
+  const typeFilter = document.getElementById("spa-filter-type")?.value || "ALL";
+  const langFilter = document.getElementById("spa-filter-lang")?.value || "ALL";
+  const scoreFilter = Number(document.getElementById("spa-filter-score")?.value || 0);
+
+  // If backend available, get enriched releases
+  let items = [];
+  const backend = BACKEND_API_BASE ? await fetchFromBackendReleases() : null;
+  if (backend && Array.isArray(backend) && backend.length > 0) {
+    items = backend.map(i => ({
+      id: i.id || generateFauxId(i.title),
+      title: i.title,
+      image_url: i.cover || i.image || "",
+      type: i.type || "ANIME",
+      averageScore: i.score || 0,
+      popularity: i.popularity || 0,
+      seasonEpisode: i.episode ? `E${i.episode}` : "",
+      languageTag: i.release_type || "EN",
+      source: "BACKEND"
+    }));
+  } else {
+    // fallback: use AniList top lists for catalogue
+    const anilistData = await fetchAniListSimple('ANIME', ['POPULARITY_DESC'], 1, 100);
+    const anilistM = await fetchAniListSimple('MANGA', ['POPULARITY_DESC'], 1, 100);
+    items = anilistData.concat(anilistM);
+  }
+
+  // apply filters
+  const filtered = items.filter(it => {
+    if (typeFilter !== "ALL" && it.type !== typeFilter) return false;
+    if (langFilter !== "ALL") {
+      // keep if languageTag includes selection OR release_type equals
+      if (!( (it.languageTag && it.languageTag.toUpperCase().includes(langFilter)) || (it.release_type && it.release_type.toUpperCase().includes(langFilter)) )) {
+        // If backend not present, languageTag often JP/EN so keep if filter is EN or ALL
+        if (langFilter === "EN" && (!it.languageTag || it.languageTag.toUpperCase() === "JP")) {
+          // we allow EN only if AniList tag not JP (best effort)
+          // fallback: accept
+        } else {
+          return false;
+        }
+      }
+    }
+    if ((it.averageScore || 0) < (scoreFilter * 10)) { // averageScore on AniList is /100
+      return false;
+    }
+    return true;
+  });
+
+  // sort: popularity desc
+  filtered.sort((a,b) => (b.popularity || 0) - (a.popularity || 0));
+
+  // render up to 100
+  filtered.slice(0, 100).forEach(it => grid.appendChild(createCard(it)));
+}
+
+/* ==========================
+   RENDER: Planning
+   - Montre planning journalier / hebdo selon upload_date si backend present
+   - sinon utilise Jikan daily
+   ========================== */
+
+async function renderPlanning() {
+  const main = clearMain();
+  const wrapper = createContainer("PLANNING");
+  wrapper.innerHTML += `
+    <div id="spa-planning-filters">
+      <label>Vue:
+        <select id="spa-planning-view">
+          <option value="daily">Quotidien</option>
+          <option value="weekly">Hebdomadaire</option>
+        </select>
+      </label>
+    </div>
+    <div id="spa-planning-list"></div>
+  `;
+  main.appendChild(wrapper);
+
+  document.getElementById("spa-planning-view").addEventListener("change", () => {
+    loadPlanning();
+  });
+
+  await loadPlanning();
+}
+
+async function loadPlanning() {
+  const view = document.getElementById("spa-planning-view").value;
+  const container = document.getElementById("spa-planning-list");
+  container.innerHTML = "<p>Chargement...</p>";
+
+  // try backend with precise upload_date
+  let backend = null;
+  if (BACKEND_API_BASE) {
+    backend = await fetchFromBackendReleases();
+  }
+
+  if (backend && backend.length > 0) {
+    // group by day
+    const byDay = {};
+    backend.forEach(it => {
+      const d = it.upload_date ? (new Date(it.upload_date)).toISOString().slice(0,10) : "unknown";
+      if (!byDay[d]) byDay[d] = [];
+      byDay[d].push(it);
+    });
+
+    // render
+    container.innerHTML = "";
+    const keys = Object.keys(byDay).sort().reverse();
+    for (const day of keys) {
+      const dayDiv = document.createElement("div");
+      dayDiv.className = "spa-planning-day";
+      const dt = new Date(day);
+      dayDiv.innerHTML = `<h3>${isNaN(dt.getTime()) ? day : dt.toLocaleDateString()}</h3>`;
+      const row = document.createElement("div");
+      row.className = "carousel-anime";
+      byDay[day].forEach(it => {
+        const mapped = {
+          id: it.id || generateFauxId(it.title),
+          title: it.title,
+          image_url: it.cover || it.image || "",
+          type: it.type || "ANIME",
+          seasonEpisode: it.episode ? `E${it.episode}` : "",
+          languageTag: it.release_type || "EN",
+          source: "BACKEND"
+        };
+        row.appendChild(createCard(mapped));
+      });
+      dayDiv.appendChild(row);
+      container.appendChild(dayDiv);
+      if (view === "daily") break; // only show latest day when daily
+    }
+  } else {
+    // fallback: show today's Jikan schedule
+    const items = await fetchJikanDaily();
+    container.innerHTML = "";
+    const row = document.createElement("div"); row.className = "carousel-anime";
+    items.forEach(it => {
+      row.appendChild(createCard({
+        id: generateFauxId(it.title),
+        title: it.title,
+        image_url: it.image_url,
+        type: it.type,
+        seasonEpisode: it.seasonEpisode,
+        languageTag: it.language || "JP",
+        source: "JIKAN"
+      }));
+    });
+    container.appendChild(row);
+  }
+}
+
+/* ==========================
+   RENDER: Profil
+   - form profile, favorites, history, clear buttons
+   ========================== */
+
+function renderProfile() {
+  const main = clearMain();
+  const wrapper = createContainer("PROFIL");
+  const profile = getProfile();
+  wrapper.innerHTML += `
+    <div class="spa-profile">
+      <div class="spa-profile-left">
+        <div class="spa-avatar">
+          <img id="spa-avatar-img" src="${profile.avatar || 'src/assets/icons/user-square.svg'}" alt="avatar" width="120" height="120">
+        </div>
+        <div>
+          <label>Pseudo: <input id="spa-profile-username" value="${escapeHtml(profile.username || '')}"></label>
+        </div>
+        <div>
+          <label>Theme:
+            <select id="spa-profile-theme">
+              <option value="dark" ${profile.theme === 'dark' ? 'selected' : ''}>Dark</option>
+              <option value="light" ${profile.theme === 'light' ? 'selected' : ''}>Light</option>
+            </select>
+          </label>
+        </div>
+        <div>
+          <button id="spa-save-profile">Enregistrer</button>
+          <button id="spa-clear-data">Effacer historique</button>
+        </div>
+      </div>
+      <div class="spa-profile-right">
+        <h3>Reprenez votre visionnage</h3>
+        <div id="spa-profile-lastWatched" class="carousel-anime"></div>
+        <h3>Favoris</h3>
+        <div id="spa-profile-favorites" class="carousel-anime"></div>
+      </div>
+    </div>
+  `;
+  main.appendChild(wrapper);
+
+  // listeners
+  document.getElementById("spa-save-profile").addEventListener("click", () => {
+    const newProfile = {
+      username: document.getElementById("spa-profile-username").value.trim(),
+      avatar: document.getElementById("spa-avatar-img").src,
+      theme: document.getElementById("spa-profile-theme").value
+    };
+    setProfile(newProfile);
+    alert("Profil sauvegardé !");
+  });
+
+  document.getElementById("spa-clear-data").addEventListener("click", () => {
+    if (!confirm("Effacer tout l'historique local (lastWatched, history, favorites) ?")) return;
+    lsSet(LS_KEYS.LAST_WATCHED, []);
+    lsSet(LS_KEYS.HISTORY, []);
+    lsSet(LS_KEYS.FAVORITES, []);
+    renderProfile(); // rerender
+  });
+
+  // fill lastWatched and favorites
+  const last = lsGet(LS_KEYS.LAST_WATCHED, []);
+  const favs = lsGet(LS_KEYS.FAVORITES, []);
+  const lwContainer = document.getElementById("spa-profile-lastWatched");
+  const favContainer = document.getElementById("spa-profile-favorites");
+  lwContainer.innerHTML = "";
+  favContainer.innerHTML = "";
+  (last || []).forEach(it => lwContainer.appendChild(createCard(it)));
+  (favs || []).forEach(it => favContainer.appendChild(createCard(it)));
+}
+
+/* ==========================
+   RENDER: Detail (anime/manga)
+   - utilise sessionCache.lastOpenedData si présent pour éviter re-fetch
+   - sinon tente AniList fetch by id
+   ========================== */
+
+async function renderDetail(id) {
+  const main = clearMain();
+  const wrapper = createContainer("");
+  wrapper.classList.add("spa-detail-wrapper");
+  main.appendChild(wrapper);
+
+  // try session cache first
+  const session = sessionCache["lastOpenedData"];
+  let item = null;
+  if (session && ("" + (session.id || generateFauxId(session.title))) === decodeURIComponent(id)) {
+    item = session;
+  }
+
+  // otherwise try backend if configured (search by id)
+  if (!item && BACKEND_API_BASE) {
+    try {
+      const res = await fetch(`${BACKEND_API_BASE.replace(/\/$/, "")}/api/releases/${encodeURIComponent(id)}`);
+      if (res.ok) item = await res.json();
+    } catch (e) { /* ignore */ }
+  }
+
+  // fallback: try AniList by id if numeric
+  if (!item && !isNaN(Number(id))) {
+    // call AniList media query by id
+    try {
+      const q = `query ($id: Int) { Media(id: $id) { id title {romaji english native userPreferred} description format episodes averageScore popularity coverImage { large } } }`;
+      const resp = await fetch('https://graphql.anilist.co', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({query: q, variables: {id: Number(id)}})
+      });
+      const j = await resp.json();
+      if (j.data && j.data.Media) {
+        const m = j.data.Media;
+        item = {
+          id: m.id,
+          title: m.title.userPreferred,
+          image_url: m.coverImage.large,
+          averageScore: m.averageScore,
+          popularity: m.popularity,
+          episodes: m.episodes,
+          description: (m.description || "").replace(/<\/?[^>]+(>|$)/g, ""), // strip HTML
+          type: m.format || "ANIME",
+          source: "ANILIST"
+        };
+      }
+    } catch (e) { console.warn(e); }
+  }
+
+  if (!item) {
+    wrapper.innerHTML = `<p>Impossible de trouver les informations pour cet item.</p>`;
+    return;
+  }
+
+  // Render main detail layout respecting header/footer and site CSS
+  const html = `
+    <div class="spa-detail">
+      <div class="spa-detail-left">
+        <img src="${item.image_url || 'src/assets/icons/cards.svg'}" alt="${escapeHtml(item.title)}" width="260">
+        <div class="spa-detail-actions">
+          <button id="spa-add-fav">Ajouter aux favoris</button>
+        </div>
+      </div>
+      <div class="spa-detail-right">
+        <h1>${escapeHtml(item.title)}</h1>
+        <p><strong>Score:</strong> ${ (item.averageScore ? (item.averageScore/10).toFixed(1) + "/10" : "N/A") } &nbsp; <strong>Popularité:</strong> ${item.popularity || "N/A"}</p>
+        <p>${escapeHtml(item.description || "")}</p>
+        <div id="spa-detail-releases" class="carousel-anime"></div>
+      </div>
+    </div>
+  `;
+  wrapper.innerHTML = html;
+
+  // Favoris handler
+  document.getElementById("spa-add-fav").addEventListener("click", () => {
+    const favs = lsGetOrInit(LS_KEYS.FAVORITES);
+    // dedupe
+    if (favs.some(f => f.id === (item.id || generateFauxId(item.title)))) {
+      alert("Déjà en favoris !");
+      return;
+    }
+    favs.unshift({
+      id: item.id || generateFauxId(item.title),
+      title: item.title,
+      image_url: item.image_url
+    });
+    lsSet(LS_KEYS.FAVORITES, favs.slice(0, 100));
+    alert("Ajouté aux favoris !");
+  });
+
+  // Releases : if backend available, show releases from backend for this anime (language prioritized)
+  const relContainer = document.getElementById("spa-detail-releases");
+  relContainer.innerHTML = "";
+  if (BACKEND_API_BASE) {
+    try {
+      const r = await fetch(`${BACKEND_API_BASE.replace(/\/$/, "")}/api/releases?title=${encodeURIComponent(item.title)}`);
+      if (r.ok) {
+        const dat = await r.json();
+        // sort by language priority
+        dat.sort((a,b) => langPriority(a.release_type) - langPriority(b.release_type));
+        dat.slice(0, 20).forEach(rs => {
+          relContainer.appendChild(createCard({
+            id: rs.id || generateFauxId(rs.title + "-" + rs.upload_date),
+            title: rs.title,
+            image_url: rs.cover || item.image_url,
+            type: rs.type,
+            seasonEpisode: rs.episode ? `E${rs.episode}` : "",
+            languageTag: rs.release_type || "EN",
+            source: "BACKEND"
+          }));
+        });
+      } else {
+        relContainer.innerHTML = "<p>Aucune release trouvée via le backend.</p>";
+      }
+    } catch (e) {
+      relContainer.innerHTML = "<p>Erreur en récupérant les releases.</p>";
+    }
+  } else {
+    // no backend: can't get Nyaa releases from client (security/CORS). We inform user.
+    relContainer.innerHTML = "<p>Pas d'informations de releases locales (déployer backend pour les releases VOSTFR/VF précises).</p>";
+  }
+
+  // Record to history
+  const history = lsGetOrInit(LS_KEYS.HISTORY);
+  history.unshift({ id: item.id || generateFauxId(item.title), title: item.title, date: Date.now() });
+  lsSet(LS_KEYS.HISTORY, history.slice(0, 200));
+}
+
+/* ==========================
+   BROAD ROUTE HANDLER
+   ========================== */
+
+async function routeHandler() {
+  const route = getRoute();
+  // route examples:
+  // "/" or "" -> home
+  // "/catalogue" -> catalogue
+  // "/planning"
+  // "/profil"
+  // "/detail/:id" or "/anime/:id" or "/manga/:id"
+  if (route === "/" || route === "" || route === "/home") {
+    await renderHome();
+    return;
+  }
+  if (route.startsWith("/catalogue") || route.toLowerCase() === "/catalog") {
+    await renderCatalogue();
+    return;
+  }
+  if (route.startsWith("/planning")) {
+    await renderPlanning();
+    return;
+  }
+  if (route.startsWith("/profil") || route.startsWith("/profile")) {
+    renderProfile();
+    return;
+  }
+  if (route.startsWith("/detail/")) {
+    const id = route.split("/")[2];
+    await renderDetail(decodeURIComponent(id));
+    return;
+  }
+  // fallback: try detail with prefix /anime/:id or /manga/:id
+  if (route.startsWith("/anime/") || route.startsWith("/manga/")) {
+    const id = route.split("/")[2];
+    await renderDetail(decodeURIComponent(id));
+    return;
+  }
+  // unknown -> home
+  await renderHome();
+}
+
+/* ==========================
+   BOOT / NAV BINDING
+   ========================== */
+
+function bindNavLinks() {
+  // desktop nav anchors
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = a.getAttribute('href') || "#/";
+      // convert hashlike anchors (#Catalogue) to lower-case route
+      if (href.startsWith("#")) {
+        const route = href.replace(/^#/, "").toLowerCase();
+        navigateTo("/" + route);
+      } else {
+        navigateTo("/" + href);
+      }
+      routeHandler();
+    });
+  });
+
+  // mobile links
+  document.querySelectorAll('.mobile-link').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const text = a.textContent.trim().toLowerCase();
+      if (text.includes("catalog")) navigateTo("/catalogue");
+      else if (text.includes("plan")) navigateTo("/planning");
+      else if (text.includes("profil") || text.includes("profile")) navigateTo("/profil");
+      routeHandler();
+      // close mobile menu if present
+      document.querySelector('.mobile-menu-top')?.classList.remove('open');
+      document.getElementById('burgerBtn')?.classList.remove('burger-open');
+      document.querySelector('.menu-overlay')?.classList.remove('active');
+      document.body.classList.remove('no-scroll');
+    });
+  });
+
+  // search input listeners (desktop/mobile) - we keep minimal
+  const desktopSearch = document.querySelector('.shiori-desktop-search input');
+  if (desktopSearch) {
+    desktopSearch.addEventListener('keydown', (e) => {
+      if (e.key === "Enter") {
+        const q = desktopSearch.value.trim();
+        if (q) {
+          // navigate to catalogue + query param stored in sessionCache
+          sessionCache['lastQuery'] = q;
+          navigateTo("/catalogue");
+          routeHandler();
+        }
+      }
+    });
+  }
+
+  const mobileSearch = document.querySelector('.shiori-mobile-search input');
+  if (mobileSearch) {
+    mobileSearch.addEventListener('keydown', (e) => {
+      if (e.key === "Enter") {
+        const q = mobileSearch.value.trim();
+        if (q) {
+          sessionCache['lastQuery'] = q;
+          navigateTo("/catalogue");
+          routeHandler();
+        }
+      }
+    });
+  }
+}
+
+// initial boot
+window.addEventListener('DOMContentLoaded', async () => {
+  // Bind nav and other UI (burger etc exist in your code)
+  bindNavLinks();
+
+  // Hash change -> routeHandler
+  window.addEventListener('hashchange', routeHandler);
+
+  // Run initial route
+  await routeHandler();
+
+  // Footer year update (tu avais déjà)
+  const copyrightYear = document.getElementById('date-copyright');
+  if (copyrightYear) copyrightYear.textContent = new Date().getFullYear();
+
+  // Keep other startup tasks you already had: bind burger, search, etc.
+});
+
+/* ===============================================================
+   END OF MAIN SCRIPT
+   - functions below are referenced from original script: getAniListQuery, fetchJikanDaily, setDateTitle
+   - I assume your original definitions exist; if not, they are included below as minimal versions.
+   =============================================================== */
+
+/* ------------ Minimal fallback implementations (only if not present) ------------- */
+if (typeof getAniListQuery === "undefined") {
+  function getAniListQuery(type = 'ANIME') {
+    return `query ($page: Int, $perPage: Int, $sort: [MediaSort]) {
+      Page(page: $page, perPage: $perPage) {
+        media(type: ${type}, sort: $sort) {
+          id
+          title { userPreferred }
+          coverImage { large medium }
+          startDate { year month day }
+          season
+          episodes
+          averageScore
+          popularity
+          type
+          staff(page: 1, perPage: 1) {
+            edges { node { language } }
+          }
+        }
+      }
+    }`;
+  }
+}
+
+if (typeof fetchJikanDaily === "undefined") {
+  async function fetchJikanDaily() {
+    try {
+      const today = new Date();
+      const weekday = today.getDay();
+      const jikanWeekdays = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'];
+      const response = await fetch(`https://api.jikan.moe/v4/schedules/${jikanWeekdays[weekday]}`);
+      const data = await response.json();
+      if (!data.data) return [];
+      return data.data
+        .filter(item => item.rating !== "Rx")
+        .map(m => ({
+          title: m.title,
+          image_url: m.images.jpg.image_url,
+          startDate: { year: today.getFullYear(), month: today.getMonth()+1, day: today.getDate() },
+          averageScore: m.score ? m.score * 10 : 0,
+          popularity: m.members || 0,
+          seasonEpisode: m.episodes ? `E${m.episodes}` : "",
+          type: m.type ? m.type.toUpperCase() : "ANIME",
+          language: "JP"
+        }));
+    } catch (e) {
+      console.error("fetchJikanDaily fallback error", e);
+      return [];
+    }
+  }
+}
+
+if (typeof setDateTitle === "undefined") {
+  function setDateTitle() {
+    const dateTitle = document.getElementById('date-title');
+    const now = new Date();
+    const jours = ['DIMANCHE','LUNDI','MARDI','MERCREDI','JEUDI','VENDREDI','SAMEDI'];
+    const jour = jours[now.getDay()];
+    const jourNum = String(now.getDate()).padStart(2,'0');
+    const mois = String(now.getMonth()+1).padStart(2,'0');
+    if (dateTitle) dateTitle.textContent = `SORTIES DU ${jour} - ${jourNum}/${mois}`;
+  }
+}
+
 /* =============================================================== */
 /*                   INITIALISATION AU CHARGEMENT                  */
 /* =============================================================== */
