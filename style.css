@@ -337,12 +337,13 @@ width: 100%;
 display: flex;
 justify-content: center;
 margin-top: 2rem;
+user-select: none;
 }
 
 .season-banner {
 position: relative;
 width: 76%;
-min-height: 240px;
+min-height: 215px;
 background: #0a0a0a;
 border-radius: 12px;
 padding: 0;
@@ -357,36 +358,37 @@ border: 1px solid rgba(195, 66, 63, 0.6);
 /* Conteneur des images de la bannière */
 .season-banner-images {
 display: flex;
-flex: 1 1 auto;
+flex-shrink: 0;
 overflow: hidden;
-padding-left: 20px;
-gap: 10px;
-z-index: 2;
+padding-left: 0px;
+padding-right: px;
+margin-right: -60px;
+z-index: 1;
 }
 
 /* Découpe diagonale pour un effet visuel moderne */
 .season-banner-images img {
-height: 220px;
-width: 140px;
+height: 100%;
+width: 150px;
 object-fit: cover;
-border-radius: 6px;
-cursor: pointer;
+border-radius: 0px;
+z-index: 2;
 transition: transform .3s ease, filter .3s ease;
-clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+clip-path: polygon(0% 0%, 50% 0%, 92% 100%, 0% 100%);
 }
 
-.season-banner-images img:hover {
-transform: scale(1.05);
-filter: brightness(1.15);
+/* Première image avec découpe spécifique */
+.season-banner-images img:first-child {
+clip-path: polygon(0% 0%, 50% 0%, 92% 100%, 0% 100%);
 }
 
 /* Texte de la bannière (titre + description) */
 .season-banner-text {
 position: relative;
-z-index: 5;
+z-index: 10;
 width: auto;
 height: auto;
-padding-right: 30px;
+padding-right: 10px;
 text-align: center;
 display: flex;
 flex-direction: column;
@@ -441,7 +443,7 @@ font-family: 'Quicksand', sans-serif;
         align-items: center; /* Centre verticalement tous les éléments */
         justify-content: space-between;
         padding: 0.5rem 5%; /* Alignement avec le body */
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.5rem;
         position: relative;
         height: 50px; /* Fixe une hauteur pour garantir le centrage parfait */
     }
@@ -487,7 +489,7 @@ font-family: 'Quicksand', sans-serif;
         border: 1px solid #333;
         border-radius: 8px;
         padding: 0.5em 1em 0.5em 32px; 
-        width: 75px; 
+        width: 125px; 
         color: white;
         transition: all 0.2s;
         font-family: 'Quicksand', sans-serif;
@@ -543,7 +545,6 @@ font-family: 'Quicksand', sans-serif;
 
     .titre-accueil:checked {
         color: #C3423F;
-        transition: all 1.5s;
     }
 
     /* --- ANIMATION BURGER --- */
@@ -564,8 +565,8 @@ font-family: 'Quicksand', sans-serif;
         left: 0;
         width: 100%;
         height: calc(100vh - 60px);
-        background: rgba(10, 10, 10, 0.98);
-        backdrop-filter: blur(10px);
+        background: rgba(10, 10, 10, 0.5);
+        backdrop-filter: blur(8px);
         border-top: 1px solid rgba(255,255,255,0.06);
         transition: opacity 0.3s ease, visibility 0.3s;
         opacity: 0;
@@ -598,15 +599,15 @@ font-family: 'Quicksand', sans-serif;
     .nav-mobile-menu {
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 25px;
         margin-top: 1rem;
     }
 
     .nav-mobile-icon {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
         object-fit: contain;
-        margin-right: 10px;
+        margin-right: 15px;
     }
     
     .mobile-link {
@@ -616,7 +617,7 @@ font-family: 'Quicksand', sans-serif;
         font-size: 1.1rem;
         padding: 0.5rem 0;
         color: white;
-        font-weight: 600;
+        font-weight: 700;
         text-decoration: none;
     }
 
@@ -648,9 +649,8 @@ font-family: 'Quicksand', sans-serif;
 
     .season-banner-images img {
         width: 22%;
-        aspect-ratio: 2/3;
         border-radius: 6px;
-        clip-path: polygon(8% 0%, 100% 0%, 92% 100%, 0% 100%);
+        clip-path: polygon(0% 15%, 100% 0%, 85% 100%, 0% 100%);
         object-fit: cover;
     }
 
