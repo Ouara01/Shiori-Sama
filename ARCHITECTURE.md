@@ -21,10 +21,10 @@
                  │
 ┌────────────────┴──────────────────────────────────────────────┐
 │                                                               │
-│  EXPRESS.JS Backend (Node.js)                               │
-│  ├─ Routes API REST                                          │
-│  ├─ Controllers (Logique Métier)                            │
-│  ├─ Middleware (CORS, Logging)                              │
+│  NEXT.JS 16 (Frontend Fullstack)                            │
+│  ├─ App Router avec SSG                                      │
+│  ├─ Client Components Interactifs                            │
+│  ├─ Zustand Store (État Global)                              │
 │  └─ TypeScript (Typage Strict)                              │
 │                                                               │
 └────────────────┬──────────────────────────────────────────────┘
@@ -160,25 +160,26 @@ cacheWithTimestamp.get(key) // Retourne null si expiré
 transformAniListAnime(anilistAnime) -> Anime
 ```
 
-## 🚀 Express Backend Expliqué
+## 🎯 Architecture Next.js Fullstack Actuelle
 
 ```typescript
-// index.ts - Serveur principal
-// 1. Crée l'app Express
-// 2. Ajoute les middlewares (CORS, JSON parsing, logging)
-// 3. Connecte les routes API
-// 4. Gère les erreurs globales
-// 5. Écoute sur le port 3001
+// Le projet n'utilise QUE Next.js 16 (pas de backend Express)
+// Pourquoi ? Les données viennent directement des APIs externes
 
-// Routes:
-// GET  /api/animes/trending
-// POST /api/users/favorites
-// etc.
+// src/app/shiori-client.tsx - Logique d'app côté client
+// 1. useEffect au montage pour initialiser l'app
+// 2. Appelle fetchTrendingAnimes() depuis animeService.ts
+// 3. AniList GraphQL retourne les animes
+// 4. Transformation et mise en cache local
+// 5. setCarousels() met à jour le Zustand store
+// 6. Les composants re-rendent automatiquement
 
-// Controllers:
-// Chaque route a un controller
-// Le controller contient la logique métier
-// Les controllers font les appels aux services externes
+// src/app/api/route.ts (optionnel, non utilisé actuellement)
+// Si besoin de logique backend à l'avenir:
+// - Serveur Node.js intégré à Next.js
+// - Endpoints REST personnalisés
+// - Authentification sécurisée
+// - Base de données
 ```
 
 ## 💾 Stockage des Données
@@ -283,8 +284,8 @@ try {
 - **React:** https://react.dev
 - **TypeScript:** https://www.typescriptlang.org/docs
 - **Zustand:** https://github.com/pmndrs/zustand
-- **Express:** https://expressjs.com
 - **AniList API:** https://anilist.gitbook.io/anilist-apiv2-docs
+- **Jikan API:** https://jikan.moe/docs/api
 
 ---
 

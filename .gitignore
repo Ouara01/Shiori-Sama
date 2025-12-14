@@ -40,3 +40,7 @@ yarn-error.log*
 next-env.d.ts
 # archived/unused
 backend.archived/
+
+# Build output
+/out/
+/docs/
