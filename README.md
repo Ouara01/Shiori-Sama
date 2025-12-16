@@ -1,19 +1,21 @@
 # 🎌 Shiori-Sama - Plateforme de Streaming d'Anime
 
-Un projet fullstack moderne et professionnel avec **Next.js 16**, **React 19**, **TypeScript** et **Zustand**.
+**Projet personnel fullstack utilisant des technologies web modernes.**
 
-## 🚀 Stack Technologique
+**En cours de développement.**
+
+## 💻 Stack Technologique
 
 **Frontend:** Next.js 16 | React 19 | TypeScript | Tailwind CSS 4 | Zustand  
 **Backend:** Next.js | TypeScript | CORS | dotenv  
-**APIs:** AniList GraphQL | Jikan  
+**APIs:** AniList GraphQL
 
 ## 📁 Structure
 
 ```
 src/
-├── app/                    # Pages Next.js (App Router)
-├── components/             # Composants React réutilisables
+├── app/                   # Pages Next.js (App Router)
+├── components/            # Composants React réutilisables
 │   ├── cards/             # AnimeCard, Carousel
 │   └── ui/                # Composants UI
 ├── services/              # Services API (AniList, Jikan)
@@ -23,9 +25,9 @@ src/
 
 backend/
 ├── src/
-│   ├── index.ts          # Serveur principal
-│   ├── routes/           # Routes API
-│   └── controllers/      # Logique métier
+│   ├── index.ts           # Serveur principal
+│   ├── routes/            # Routes API
+│   └── controllers/       # Logique métier
 └── package.json
 ```
 
@@ -34,9 +36,6 @@ backend/
 ```bash
 # Frontend
 npm install
-
-# Backend
-cd backend && npm install
 ```
 
 ## 🏃 Démarrage
@@ -44,17 +43,12 @@ cd backend && npm install
 ```bash
 # Terminal 1 - Frontend (http://localhost:3000)
 npm run dev
-
-# Terminal 2 - Backend (http://localhost:3001)
-cd backend && npm run dev
 ```
 
 ## 🌐 Déploiement
 
 **Frontend (GitHub Pages):**
 ```bash
-npm run build
-git push origin main
 # https://Ouara01.github.io/shiori-sama
 ```
 
@@ -63,15 +57,13 @@ git push origin main
 `GET /api/animes/trending` | `GET /api/animes/seasonal` | `GET /api/animes/search`  
 `POST/GET /api/users/favorites` | `POST/GET /api/users/watch-history`
 
-## 📝 Pour les Recruteurs
+## 🎓 Ce que j’ai appris / réalisé
 
-✅ Modern stack professionnel (Next.js 16, React 19, TypeScript)  
-✅ Zustand pour gestion d'état optimisée  
-✅ Backend Next.js bien structuré  
-✅ APIs GraphQL intégrées  
-✅ Code documenté en français  
-✅ Déploiement fullstack (GitHub Pages + Render)  
+- Développement front-end avec Next.js et React  
+- Gestion d’état globale avec Zustand  
+- Architecture backend organisée sous Next.js  
+- Connexion à des APIs externes (GraphQL)  
+- Documentation et bonnes pratiques de code  
+- Déploiement d’une application fullstack  
 
 ---
-
-**Bonne codification! 🎌**
