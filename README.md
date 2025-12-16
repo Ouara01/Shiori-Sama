@@ -1,11 +1,11 @@
 # 🎌 Shiori-Sama - Plateforme de Streaming d'Anime
 
-Un projet fullstack moderne et professionnel avec **Next.js 16**, **React 19**, **TypeScript**, **Express.js** et **Zustand**.
+Un projet fullstack moderne et professionnel avec **Next.js 16**, **React 19**, **TypeScript** et **Zustand**.
 
 ## 🚀 Stack Technologique
 
 **Frontend:** Next.js 16 | React 19 | TypeScript | Tailwind CSS 4 | Zustand  
-**Backend:** Express.js | TypeScript | CORS | dotenv  
+**Backend:** Next.js | TypeScript | CORS | dotenv  
 **APIs:** AniList GraphQL | Jikan  
 
 ## 📁 Structure
@@ -55,10 +55,8 @@ cd backend && npm run dev
 ```bash
 npm run build
 git push origin main
-# https://votreuser.github.io/shiori-sama
+# https://Ouara01.github.io/shiori-sama
 ```
-
-**Backend (Render):** Connecter votre repo à https://render.com
 
 ## 📊 API Endpoints
 
@@ -69,7 +67,7 @@ git push origin main
 
 ✅ Modern stack professionnel (Next.js 16, React 19, TypeScript)  
 ✅ Zustand pour gestion d'état optimisée  
-✅ Express backend bien structuré  
+✅ Backend Next.js bien structuré  
 ✅ APIs GraphQL intégrées  
 ✅ Code documenté en français  
 ✅ Déploiement fullstack (GitHub Pages + Render)  
